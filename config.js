@@ -43,6 +43,19 @@ global.keepAliveRender = 0; //Solo valores: 1 o 0
 global.botNumberCode = "" //example: "+59309090909"
 global.confirmCode = "" // No tocar esto : Do not touch this line
 // • • • • • • • • • • • • • • • • • • • • • • • • • • • • • • • • • • • •
+global.bermuda = fs.readFileSync("./media/menus/bermuda.jpg");
+global.purgatorio = fs.readFileSync("./media/menus/purgatorio.jpg");
+global.nexterra = fs.readFileSync("./media/menus/nexterra.jpg");
+global.alpes = fs.readFileSync("./media/menus/alpes.jpg");
+global.kalahari = fs.readFileSync("./media/menus/kalahari.jpg");
+global.agenda = fs.readFileSync("./media/menus/agenda.jpg");
+global.reglascuadri = fs.readFileSync("./media/menus/reglascuadri.jpg");
+global.vestimentacuadri = fs.readFileSync("./media/menus/vestimentacuadri.jpg");
+global.podiocuadri = fs.readFileSync("./media/menus/podiocuadri.jpg");
+global.reglasclk = fs.readFileSync("./media/menus/reglasclk.jpg");
+global.reglaslideres = fs.readFileSync("./media/menus/reglaslideres.jpg");
+global.combode = fs.readFileSync("./media/menus/combode.jpg");
+global.combobr = fs.readFileSync("./media/menus/combobr.jpg");
 
 // • • • • • • • • • • • • • • • • • • • • • • • • • • • • • • • • • • • •
 // ❰❰ Multi Idioma Dinámico : Dynamic Multi Language (MID-GB) ❱❱
