@@ -1,57 +1,91 @@
-import yts from 'yt-search' 
-const handler = async (m, { conn, text, usedPrefix, command }) => {
-    if (!text) throw `⭐ 𝘐𝘯𝘨𝘳𝘦𝘴𝘢 𝘦𝘭 𝘵𝘪́𝘵𝘶𝘭𝘰 𝘥𝘦 𝘭𝘢 𝘤𝘢𝘯𝘤𝘪𝘰́𝘯 𝘥𝘦 𝘠𝘰𝘶𝘛𝘶𝘣𝘦 𝘲𝘶𝘦 𝘥𝘦𝘴𝘦𝘢𝘴 𝘥𝘦𝘴𝘤𝘢𝘳𝘨𝘢𝘳.
+import fetch from "node-fetch";
+import yts from "yt-search";
 
-» 𝘌𝘫𝘦𝘮𝘱𝘭𝘰:
-${usedPrefix + command} Feid - Luna`;
-    await m.react('🕓')
+const handler = async (m, {conn, command, args, text, usedPrefix}) => {
 
-    const randomReduction = Math.floor(Math.random() * 5) + 1;
-    let search = await yts(text);
-    let f = `\n\n${String.fromCharCode(68,101,118,101,108,111,112,101,100,32,98,121,32,73,39,109,32,70,122,32,126)}`;
-    let isVideo = /vid$/.test(command);
-    let urls = search.all[0].url;
-    let body = `01:27 ━━━━━⬤──── ${search.all[0].timestamp}
-*⇄ㅤ   ◁   ㅤ  ❚❚ㅤ     ▷ㅤ   ↻*
-𝙀𝙡𝙞𝙩𝙚 𝘽𝙤𝙩 𝙂𝙡𝙤𝙗𝙖𝙡 `; conn.sendMessage(m.chat, { 
-        image: { url: search.all[0].thumbnail }, 
-        caption: body + f
-    }, { quoted: m });
+if (!text) return conn.reply(m.chat, `🍿 Ingrese el nombre de una *Musica* o *Video*`,  m, rcanal, )
 
-    let res = await dl_vid(urls)
-    await m.react('✅')
-    let type = isVideo ? 'video' : 'audio';
-    let video = res.data.mp4;
-    let audio = res.data.mp3;
-    conn.sendMessage(m.chat, { 
-        [type]: { url: isVideo ? video : audio }, 
-        gifPlayback: false, 
-        mimetype: isVideo ? "video/mp4" : "audio/mpeg" 
-    }, { quoted: m });
-}
+/*conn.reply(m.chat, global.wait, m, {
+contextInfo: { externalAdReply :{ mediaUrl: null, mediaType: 1, showAdAttribution: true,
+title: packname,
+body: dev,
+previewType: 0, thumbnail: icons,
+sourceUrl: channel }}})*/
 
-handler.command = ['play', 'play2'];
+try { 
+await m.react(rwait)
+const yt_play = await search(args.join(' '))
+let txt = `ゲ◜៹ YouTube Search ៹◞ゲ\n\n`
+    txt += `Titulo:\n${yt_play[0].title}\n\n`
+    txt += `Publicado:\n${yt_play[0].ago}\n\n`
+    txt += `Duración:\n${secondString(yt_play[0].duration.seconds)}\n\n`
+    txt += `Url:\n${yt_play[0].url}`
+
+let listSections = []
+listSections.push({
+title: `OPCIOPNES`, highlight_label: ``,
+rows: [
+{
+header: "Audio",
+title: "",
+description: `Audio.`,
+id: `#ytmp3 ${text}`,
+},
+{
+header: "Video",
+title: "",
+description: `Video.`,
+id: `#play1 mp4 ${text}`,
+},
+{
+header: "Documento Mp3",
+title: "",
+description: `AudioDoc.`,
+id: `#play1 mp3doc ${text}`,
+},
+{
+header: "Documento Mp4",
+title: "",
+description: `VideoDoc.`,
+id: `#play1 mp4doc ${text}`,
+},
+],
+})
+let menu = ''
+await conn.sendListB(m.chat, menu, txt, `Clik`, yt_play[0].thumbnail, listSections, m)
+await m.react(done)
+} catch {
+await m.react(error)
+await conn.reply(m.chat, `✘ *Ocurrío un error*`, m, rcanal)
+}}
 handler.help = ['play', 'play2'];
 handler.tags = ['descargas'];
+handler.command = ['play', 'play2']
+handler.register = true;
 export default handler;
 
-async function dl_vid(url) {
-    const response = await fetch('https://shinoa.us.kg/api/download/ytdl', {
-        method: 'POST',
-        headers: {
-            'accept': '*/*',
-            'api_key': 'free',
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            text: url,
-        })
-    });
+async function search(query, options = {}) {
+const search = await yts.search({query, hl: 'es', gl: 'ES', ...options});
+return search.videos;
+}
 
-    if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-    }
+function MilesNumber(number) {
+const exp = /(\d)(?=(\d{3})+(?!\d))/g;
+const rep = '$1.';
+const arr = number.toString().split('.');
+arr[0] = arr[0].replace(exp, rep);
+return arr[1] ? arr.join('.') : arr[0];
+}
 
-    const data = await response.json();
-    return data;
+function secondString(seconds) {
+seconds = Number(seconds);
+const d = Math.floor(seconds / (3600 * 24));
+const h = Math.floor((seconds % (3600 * 24)) / 3600);
+const m = Math.floor((seconds % 3600) / 60);
+const s = Math.floor(seconds % 60);
+const dDisplay = d > 0 ? d + (d == 1 ? ' día, ' : ' días, ') : '';
+const hDisplay = h > 0 ? h + (h == 1 ? ' hora, ' : ' horas, ') : '';
+const mDisplay = m > 0 ? m + (m == 1 ? ' minuto, ' : ' minutos, ') : '';
+const sDisplay = s > 0 ? s + (s == 1 ? ' segundo' : ' segundos') : '';
+return dDisplay + hDisplay + mDisplay + sDisplay;
 }
