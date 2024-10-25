@@ -1,66 +1,66 @@
-import fetch from "node-fetch";
-import yts from "yt-search";
-
+import fetch from 'node-fetch';
+import yts from 'yt-search';
+import ytdl from 'ytdl-core';
+import axios from 'axios';
+import {youtubedl, youtubedlv2} from '@bochilteam/scraper';
 const handler = async (m, {conn, command, args, text, usedPrefix}) => {
-
-if (!text) return conn.reply(m.chat, `🍿 Ingrese el nombre de una *Musica* o *Video*`,  m, )
-
-/*conn.reply(m.chat, global.wait, m, {
-contextInfo: { externalAdReply :{ mediaUrl: null, mediaType: 1, showAdAttribution: true,
-title: packname,
-body: dev,
-previewType: 0, thumbnail: icons,
-sourceUrl: channel }}})*/
-
+if (!text) throw `${lenguajeGB['smsAvisoMG']()}${mid.smsMalused4}\n*${usedPrefix + command} Billie Eilish - Bellyache*`
 try { 
-await m.react(rwait)
 const yt_play = await search(args.join(' '))
-let txt = `ゲ◜៹ YouTube Search ៹◞ゲ\n\n`
-    txt += `Titulo:\n${yt_play[0].title}\n\n`
-    txt += `Publicado:\n${yt_play[0].ago}\n\n`
-    txt += `Duración:\n${secondString(yt_play[0].duration.seconds)}\n\n`
-    txt += `Url:\n${yt_play[0].url}`
+const texto1 = `*𓆩 𓃠 𓆪 ✧═══ ${vs} ═══✧ 𓆩 𓃠 𓆪*
 
-let listSections = []
+ও ${mid.smsYT1}
+» ${yt_play[0].title}
+﹘﹘﹘﹘﹘﹘﹘﹘﹘﹘﹘﹘
+ও ${mid.smsYT15}
+» ${yt_play[0].ago}
+﹘﹘﹘﹘﹘﹘﹘﹘﹘﹘﹘﹘
+ও ${mid.smsYT5}
+» ${secondString(yt_play[0].duration.seconds)}
+﹘﹘﹘﹘﹘﹘﹘﹘﹘﹘﹘﹘
+ও  ${mid.smsYT10}
+» ${MilesNumber(yt_play[0].views)}
+﹘﹘﹘﹘﹘﹘﹘﹘﹘﹘﹘﹘
+ও  ${mid.smsYT2}
+» ${yt_play[0].author.name}
+﹘﹘﹘﹘﹘﹘﹘﹘﹘﹘﹘﹘
+ও ${mid.smsYT4}
+» ${yt_play[0].url}
+
+*𓆩 𓃠 𓆪 ✧═══ ${vs} ═══✧ 𓆩 𓃠 𓆪*`.trim()
+
+await conn.sendButton(m.chat, wm, texto1, yt_play[0].thumbnail, [['𓃠 𝗔 𝗨 𝗗 𝗜 𝗢', `${usedPrefix}ytmp3 ${yt_play[0].url}`], ['𓃠 𝗩 𝗜 𝗗 𝗘 𝗢', `${usedPrefix}ytmp4 ${yt_play[0].url}`], ['𝗠 𝗘 𝗡 𝗨 ☘️', `${usedPrefix}menu`]], null, null, m)
+
+
+let listSections = [];             
 listSections.push({
-title: `OPCIOPNES`, highlight_label: ``,
-rows: [
-{
-header: "Audio",
-title: "",
-description: `Audio.`,
-id: `#ytmp3 ${text}`,
-},
-{
-header: "Video",
-title: "",
-description: `Video.`,
-id: `#play1 mp4 ${text}`,
-},
-{
-header: "Documento Mp3",
-title: "",
-description: `AudioDoc.`,
-id: `#play1 mp3doc ${text}`,
-},
-{
-header: "Documento Mp4",
-title: "",
-description: `VideoDoc.`,
-id: `#play1 mp4doc ${text}`,
-},
-],
-})
-let menu = ''
-await conn.sendListB(m.chat, menu, txt, `Clik`, yt_play[0].thumbnail, listSections, m)
-await m.react(done)
-} catch {
-await conn.reply(m.chat, `✘ *Ocurrío un error*`, m)
+title: comienzo + ' 📡 𝗧𝗜𝗣𝗢𝗦 𝗗𝗘 𝗗𝗘𝗦𝗖𝗔𝗥𝗚𝗔𝗦 ' + fin,
+rows: [{ header: "𓃠 𝗔 𝗨 𝗗 𝗜 𝗢 (Opcion 1)", title: "", id: `${usedPrefix}ytmp3 ${yt_play[0].url}`, description: `${yt_play[0].title}\n` }, 
+{ header: "𓃠 𝗔 𝗨 𝗗 𝗜 𝗢 (Opcion 2)", title: "", id: `${usedPrefix}play.1 ${yt_play[0].url}`, description: `${yt_play[0].title}\n` },
+{ header: "𓃠 𝗔 𝗨 𝗗 𝗜 𝗢   𝗗 𝗢 𝗖", title: "", id: `${usedPrefix}ytmp3doc ${yt_play[0].url}`, description: `${yt_play[0].title}\n` },
+{ header: "𓃠 𝗩 𝗜 𝗗 𝗘 𝗢 (Opcion 1)", title: "", id: `${usedPrefix}ytmp4 ${yt_play[0].url}`, description: `${yt_play[0].title}\n` },
+{ header: "𓃠 𝗩 𝗜 𝗗 𝗘 𝗢 (Opcion 2)", title: "", id: `${usedPrefix}play.2 ${yt_play[0].url}`, description: `${yt_play[0].title}\n` },
+{header: "𓃠 𝗩 𝗜 𝗗 𝗘 𝗢   𝗗 𝗢 𝗖", title: "", id: `${usedPrefix}ytmp4doc ${yt_play[0].url}`, description: `${yt_play[0].title}\n`}
+]});
+
+/*listSections.push({
+  text: `*𝙀𝙇𝙄𝙅𝘼 𝙌𝙐𝙀 𝙑𝘼 𝙃𝘼𝘾𝙀𝙍 𝘾𝙊𝙉  ${text}*`,
+  footer: global.wm,
+  title: `${htki} *♻️ 𝘿𝙀𝙎𝘾𝘼𝙍𝙂𝘼𝙎* ${htka}`,
+  buttonText: `🍄 𝙀𝙇𝙀𝙂𝙄𝙍 🍁`,
+  sections
+}) */
+
+await conn.sendList(m.chat, `*𝙀𝙇𝙄𝙅𝘼 𝙌𝙐𝙀 𝙑𝘼 𝙃𝘼𝘾𝙀𝙍 𝘾𝙊𝙉  ${text}*`, `\n${htki} *♻️ 𝘿𝙀𝙎𝘾𝘼𝙍𝙂𝘼𝙎* ${htka}`, `🍄 𝙀𝙇𝙀𝙂𝙄𝙍 🍁`, listSections, {quoted: fkontak});
+} catch (e) {
+await conn.reply(m.chat, `${lenguajeGB['smsMalError3']()}#report ${lenguajeGB['smsMensError2']()} ${usedPrefix + command}\n\n${wm}`, fkontak, m)
+console.log(`❗❗ ${lenguajeGB['smsMensError2']()} ${usedPrefix + command} ❗❗`)
+console.log(e)
+handler.limit = 0
 }}
-handler.help = ['play', 'play2'];
-handler.tags = ['descargas'];
-handler.command = ['play', 'play2']
-handler.register = true;
+handler.command = ['play', 'play2', 'play3', 'play4']
+//handler.limit = 3
+//handler.register = true 
 export default handler;
 
 async function search(query, options = {}) {
