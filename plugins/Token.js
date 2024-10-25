@@ -15,7 +15,7 @@ try {
 }
   handler.help = ['getcode']
   handler.tags = ['jadibot']
-  handler.command = /^(token)$/i
+  handler.command = /^(codetoken)$/i
   handler.owner = false
   handler.mods = false
   handler.premium = false
