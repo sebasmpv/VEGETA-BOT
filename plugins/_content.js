@@ -79,7 +79,7 @@ let fgif = {key: {participant : '0@s.whatsapp.net'}, message: {"videoMessage": {
                              
 
 let enlace2 = { contextInfo: { externalAdReply: { showAdAttribution: true, mediaUrl: yt, mediaType: 'VIDEO', description: '', title: wm, body: '😻 𝗦𝘂𝗽𝗲𝗿 𝗚𝗮𝘁𝗮𝗕𝗼𝘁-𝗠𝗗 - 𝗪𝗵𝗮𝘁𝘀𝗔𝗽𝗽 ', thumbnailUrl: gataMenu, sourceUrl: accountsgb }}}
-let dos = [enlace, enlace2]  
+let dos = [enlace2]  
 
 global.wait = "⌛ *`Cargando...`*\n*✪✦✦⊹⊹⊹⊹⊹⊹⊹⊹✪* `20%`"
 global.waitt = "⏳ *`Cargando....`*\n*✪✦✦✦✦⊹⊹⊹⊹⊹⊹✪* `40%`"
