@@ -1,118 +1,255 @@
-
-/*import yts from 'yt-search';
-let handler = async (m, { conn, usedPrefix, text, args, command }) => {
-    if (!text) throw `Ejemplo de uso *${usedPrefix + command}* Lil Peep hate my life`;
-    m.react('📀');
-    
-    let result = await yts(text);
-    let ytres = result.videos;
-    
-
-    let listSections = [];
-    for (let index in ytres) {
-        let v = ytres[index];
-        listSections.push({
-            title: `${index}┃ ${v.title}`,
-            rows: [
-                {
-                    header: '🎶 MP3',
-                    title: "",
-                    description: `▢ ⌚ *Duración:* ${v.timestamp}\n▢ 👀 *Vistas:* ${v.views}\n▢ 📌 *Titulo* : ${v.title}\n▢ 📆 *Fecha:* ${v.ago}\n`, 
-                    id: `${usedPrefix}yta ${v.url}`
-                },
-                {
-                    header: "🎥 MP4",
-                    title: "" ,
-                    description: `▢ ⌚ *Duración:* ${v.timestamp}\n▢ 👀 *Vistas:* ${v.views}\n▢ 📌 *Titulo* : ${v.title}\n▢ 📆 *Fecha:* ${v.ago}\n`, 
-                    id: `${usedPrefix}ytv ${v.url}`
-                }
-            ]
-        });
-    }
-
-    await conn.sendList(m.chat, '  * YOYTUBE - DL*', `\n 🍟 Resultados de:\n *${text}*`, `Click Aqui`, ytres[0].image, listSections, m);
-};
-
-handler.help = ['play2']
-handler.tags = ['dl']
-handler.command = ['play2', 'Play', 'playlist', 'playlista'] 
-handler.disabled = false
-
-export default handler*/
-
-import yts from 'yt-search'
+import fg from 'api-dylux'
 import { youtubedl, youtubedlv2 } from '@bochilteam/scraper'
+import yts from 'yt-search'
+import fetch from 'node-fetch' 
 
-const handler = async (m, { conn, text, args }) => {
-if (!text) {
-return m.reply('*Ingrese el título de un vídeo junto al tipo de media que desea recibir*\n\nPor ejemplo: `!play audio Those Eyes`\n\n> Tipos de media: `audio`, `video`, `mp3doc`, `mp4doc`')
+let handler = async (m, { conn, args, usedPrefix, text, command }) => {
+    let lister = [
+        "mp3",
+        "mp4", 
+        "mp3doc",
+        "mp4doc"
+    ]
+    let [feature, inputs, inputs_, inputs__, inputs___] = text.split(" ")
+   // if (!lister.includes(feature)) return conn.reply(m.chat, `*🚩 Ingresa el formato en que deseas descargar más el titulo de un video o musica de YouTube.*\n\nEjemplo : ${usedPrefix + command} *mp3* SUICIDAL-IDOL - ecstacy\n\nFormatos disponibles :\n${usedPrefix + command} *mp3*\n${usedPrefix + command} *mp3doc*\n${usedPrefix + command} *mp4*\n${usedPrefix + command} *mp4doc*`,  m, fake,)
+	  if (command == "play" || command == 'play2') {
+            if (!text) return conn.reply(m.chat, `*🚩 Ingresa el titulo de un video o musica de YouTube.*`,  m, fake,)
+    await m.react('🕓')
+    var res = await yts(text)
+    var vid = res.videos[0]
+    var q = '128kbps'
+const texto1 = `乂  Y O U T U B E   M U S I C\n
+	✩ *Título ∙* ${vid.title}\n
+        ✩ *Duración ∙* ${vid.timestamp}\n
+        ✩ *Visitas ∙* ${vid.views}\n
+        ✩ *Autor ∙* ${vid.author.name}\n
+        ✩ *Publicado ∙* ${vid.ago}\n
+        ✩ *Url ∙* ${'https://youtu.be/' + vid.videoId}\n`.trim()
+		
+await conn.sendButton(m.chat, texto1, wm, res.videos[0].thumbnail, [
+	['Audio 📀', `${usedPrefix}mp3 ${text}`],
+	['Video 🎥', `${usedPrefix}mp4 ${text}`]
+  ], null, [['Canal', `${md}`]], m)
+	  }
+  
+            if (command == "mp3") {
+	 if (!text) return conn.reply(m.chat, `*🚩 Ingresa el titulo de un video o musica de YouTube.*`, m, fake,)
+		
+       try {
+    const res = await yts(text)
+    const vid = res.videos[0]
+    const q = '128kbps'
+       let yt = await fg.yta(vid.url, q)
+       let { title, dl_url, size } = yt
+       let limit = 100
+       
+if (size.split('MB')[0] >= limit) return conn.reply(m.chat,`El archivo pesa mas de ${limit} MB, se canceló la Descarga.`, m).then(_ => m.react('✖️'))
+       
+await conn.sendMessage(m.chat, { audio: { url: dl_url }, mimetype: "audio/mp4", fileName: vid.title + '.mp3', quoted: m, contextInfo: {
+'forwardingScore': 200,
+'isForwarded': true,
+externalAdReply:{
+showAdAttribution: false,
+title: `${vid.title}`,
+body: `${vid.author.name}`,
+mediaType: 2, 
+sourceUrl: `${vid.url}`,
+thumbnail: await (await fetch(vid.thumbnail)).buffer()}}}, { quoted: m })
+       await m.react('✅')
+       } catch {
+       try {
+       let yt = await fg.ytmp3(vid.url, q)
+       let { title, dl_url, size } = yt
+       let limit = 100
+       
+if (size.split('MB')[0] >= limit) return conn.reply(m.chat,`El archivo pesa mas de ${limit} MB, se canceló la Descarga.`, m).then(_ => m.react('✖️'))
+       
+       await conn.sendMessage(m.chat, { audio: { url: dl_url }, mimetype: "audio/mp4", fileName: vid.title + '.mp3', quoted: m, contextInfo: {
+'forwardingScore': 200,
+'isForwarded': true,
+externalAdReply:{
+showAdAttribution: false,
+title: `${vid.title}`,
+body: `${vid.author.name}`,
+mediaType: 2, 
+sourceUrl: `${vid.url}`,
+thumbnail: await (await fetch(vid.thumbnail)).buffer()}}}, { quoted: m })
+       await m.react('✅')
+       } catch (error) {
+        await conn.reply(m.chat,`*☓ Ocurrió un error inesperado*\n\n` + error, m, fake,).then(_ => m.react('✖️'))
+        console.error(error)
+    }}
+    }
+        
+        if (command == "mp4") {
+            if (!text) return conn.reply(m.chat, `*🚩 Ingresa el titulo de un video o musica de YouTube.*`, m, fake,)
+    await m.react('🕓')
+    let res = await yts(text)
+    let vid = res.videos[0]
+    let q = '360p'
+	const texto1 = `Y O U T U B E 乂 M U S I C\n
+	✩ *Título ∙* ${vid.title}\n
+        ✩ *Duración ∙* ${vid.timestamp}\n
+        ✩ *Visitas ∙* ${vid.views}\n
+        ✩ *Autor ∙* ${vid.author.name}\n
+        ✩ *Publicado ∙* ${vid.ago}\n
+        ✩ *Url ∙* ${'https://youtu.be/' + vid.videoId}\n`
+	/*
+await conn.sendButton(m.chat, wm, texto1, res.videos[0].thumbnail, [
+	['Creador', `${usedPrefix}creador`],
+	['Menu', `${usedPrefix}menu`]
+  ], null, [['Canal', `${md}`]], m)
+       */
+       try {
+       let yt = await fg.ytv(vid.url, q)
+       let { title, dl_url, size } = yt
+       let limit = 100
+       
+if (size.split('MB')[0] >= limit) return conn.reply(m.chat,`El archivo pesa mas de ${limit} MB, se canceló la Descarga.`,  m, fake,).then(_ => m.react('✖️'))
+       
+       await conn.sendFile(m.chat, dl_url, 'yt.jpg', `${vid.title}\n⇆ㅤㅤ◁ㅤㅤ❚❚ㅤㅤ▷ㅤㅤ↻\n00:15 ━━━━●────── ${vid.timestamp}`, m)
+       await m.react('✅')
+       } catch {
+       try {
+       let yt = await fg.ytmp4(vid.url, q)
+       let { title, dl_url, size } = yt
+       let limit = 100
+       
+if (size.split('MB')[0] >= limit) return conn.reply(m.chat,`El archivo pesa mas de ${limit} MB, se canceló la Descarga.`, m, fake,).then(_ => m.react('✖️'))
+       
+       await conn.sendFile(m.chat, dl_url, 'yt.jpg', `${vid.title}\n⇆ㅤㅤ◁ㅤㅤ❚❚ㅤㅤ▷ㅤㅤ↻\n00:15 ━━━━●────── ${vid.timestamp}`, m)
+       await m.react('✅')
+       } catch (error) {
+        await conn.reply(m.chat,`*☓ Ocurrió un error inesperado*`, m).then(_ => m.react('✖️'))
+        console.error(error)
+    }}}
+    
+    if (command == "mp3doc") {
+            if (!inputs) return conn.reply(m.chat, `*🚩 Ingresa el titulo de un video o musica de YouTube.*`,  m, fake,)
+    await m.react('🕓')
+    let res = await yts(text)
+    let vid = res.videos[0]
+    let q = '128kbps'
+	const texto1 = `Y O U T U B E 乂 D O C\n
+       ✩ *Título ∙* ${vid.title}\n
+       ✩ *Duración ∙* ${vid.timestamp}\n
+       ✩ *Visitas ∙* ${vid.views}\n
+       ✩ *Autor ∙* ${vid.author.name}\n
+       ✩ *Publicado ∙* ${vid.ago}\n
+       ✩ *Url ∙* ${'https://youtu.be/' + vid.videoId}\n`
+	   /* 
+await conn.sendButton(m.chat, wm, texto1, res.videos[0].thumbnail, [
+	['Creador', `${usedPrefix}creador`],
+	['Menu', `${usedPrefix}menu`]
+  ], null, [['Canal', `${md}`]], m)
+	    */
+       try {
+       let yt = await fg.yta(vid.url, q)
+       let { title, dl_url, size } = yt
+       let limit = 100
+       
+if (size.split('MB')[0] >= limit) return conn.reply(m.chat,`El archivo pesa mas de ${limit} MB, se canceló la Descarga.`,  m, fake,).then(_ => m.react('✖️'))
+       
+       await conn.sendMessage(m.chat, { document: { url: dl_url }, mimetype: "audio/mpeg", fileName: vid.title + '.mp3', quoted: m, contextInfo: {
+'forwardingScore': 200,
+'isForwarded': true,
+externalAdReply:{
+showAdAttribution: false,
+title: `${vid.title}`,
+body: `${vid.author.name}`,
+mediaType: 2, 
+sourceUrl: `${vid.url}`,
+thumbnail: await (await fetch(vid.thumbnail)).buffer()}}}, { quoted: m })
+       await m.react('✅')
+       } catch {
+       try {
+       let yt = await fg.ytmp3(vid.url, q)
+       let { title, dl_url, size } = yt
+       let limit = 100
+       
+if (size.split('MB')[0] >= limit) return conn.reply(m.chat,`El archivo pesa mas de ${limit} MB, se canceló la Descarga.`,  m, fake,).then(_ => m.react('✖️'))
+       
+       await conn.sendMessage(m.chat, { document: { url: dl_url }, mimetype: "audio/mpeg", fileName: vid.title + '.mp3', quoted: m, contextInfo: {
+'forwardingScore': 200,
+'isForwarded': true,
+externalAdReply:{
+showAdAttribution: false,
+title: `${vid.title}`,
+body: `${vid.author.name}`,
+mediaType: 2, 
+sourceUrl: `${vid.url}`,
+thumbnail: await (await fetch(vid.thumbnail)).buffer()}}}, { quoted: m })
+       await m.react('✅')
+       } catch (error) {
+        await conn.reply(m.chat,`*☓ Ocurrió un error inesperado*`,  m, fake,).then(_ => m.react('✖️'))
+        console.error(error)
+    }}}
+    
+    if (command == "mp4doc") {
+            if (!inputs) return conn.reply(m.chat, `*🚩 Ingresa el titulo de un video o musica de YouTube.*`, m)
+    await m.react('🕓')
+    let res = await yts(text)
+    let vid = res.videos[0]
+    let q = '360p'
+	const texto1 = `Y O U T U B E 乂 M U S I C\n
+	✩ *Título ∙* ${vid.title}\n
+        ✩ *Duración ∙* ${vid.timestamp}\n
+        ✩ *Visitas ∙* ${vid.views}\n
+        ✩ *Autor ∙* ${vid.author.name}\n
+        ✩ *Publicado ∙* ${vid.ago}\n
+        ✩ *Url ∙* ${'https://youtu.be/' + vid.videoId}\n`
+	    /*
+await conn.sendButton(m.chat, wm, texto1, res.videos[0].thumbnail, [
+	['Creador', `${usedPrefix}creador`],
+	['Menu', `${usedPrefix}menu`]
+  ], null, [['Canal', `${md}`]], m)
+  */
+       
+       try {
+       let yt = await fg.ytv(vid.url, q)
+       let { title, dl_url, size } = yt
+       let limit = 300
+       
+if (size.split('MB')[0] >= limit) return conn.reply(m.chat,`El archivo pesa mas de ${limit} MB, se canceló la Descarga.`,  m, fake,).then(_ => m.react('✖️'))
+       
+       await conn.sendMessage(m.chat, { document: { url: dl_url }, caption: `${vid.title}\n⇆ㅤㅤ◁ㅤㅤ❚❚ㅤㅤ▷ㅤㅤ↻\n00:15 ━━●────── ${vid.timestamp}`, mimetype: 'video/mp4', fileName: `${vid.title}` + `.mp4`, quoted: m, contextInfo: {
+'forwardingScore': 200,
+'isForwarded': true,
+externalAdReply:{
+showAdAttribution: false,
+title: `${vid.title}`,
+body: `${vid.author.name}`,
+mediaType: 2, 
+sourceUrl: `${vid.url}`,
+thumbnail: await (await fetch(vid.thumbnail)).buffer()}}}, { quoted: m })
+       await m.react('✅')
+       } catch {
+       try {
+       let yt = await fg.ytmp4(vid.url, q)
+       let { title, dl_url, size } = yt
+       let limit = 300
+       
+if (size.split('MB')[0] >= limit) return conn.reply(m.chat,`El archivo pesa mas de ${limit} MB, se canceló la Descarga.`,  m, fake,).then(_ => m.react('✖️'))
+       
+       await conn.sendMessage(m.chat, { document: { url: dl_url }, caption: `${vid.title}\n⇆ㅤㅤ◁ㅤㅤ❚❚ㅤㅤ▷ㅤㅤ↻\n00:15 ━━●────── ${vid.timestamp}`, mimetype: 'video/mp4', fileName: `${vid.title}` + `.mp4`, quoted: m, contextInfo: {
+'forwardingScore': 200,
+'isForwarded': true,
+externalAdReply:{
+showAdAttribution: false,
+title: `${vid.title}`,
+body: `${vid.author.name}`,
+mediaType: 2, 
+sourceUrl: `${vid.url}`,
+thumbnail: await (await fetch(vid.thumbnail)).buffer()}}}, { quoted: m })
+       await m.react('✅')
+       } catch (error) {
+        await conn.reply(m.chat,`*☓ Ocurrió un error inesperado*\n\n` + error, m).then(_ => m.react('✖️'))
+        console.error(error)
+}}}
 }
-
-const parts = text.split(' ')
-const selection = parts.shift().toLowerCase()
-const query = parts.join(' ')
-
-try {
-if (query.length === 0) {
-return m.reply('Parece faltar el título del vídeo')
-}
-m.reply(wait)
-var search = await yts(query)
-var videos = search.videos
-
-if (videos.length === 0) {
-return m.reply('No se encontraron videos para el término de búsqueda proporcionado.')
-}
-const video = videos[0]
-const url = video.url
-let dl_url, mimeType, videoUrl
-
-switch (selection) {
-case 'audio': {
-let c = '360' + 'p'
-const audiodl = await youtubedl(url).catch(async _ => await youtubedlv2(url));
-const audioUrl = await audiodl.video[c].download()
-const ytMsg = `\`YouTube - ${query}\`\n\nTítulo: *${video.title}*\nVistas: *${video.views}*\nDuración: *${video.timestamp}*\nEnlace: ${url}\nDescripción: ${video.description}\n\n> Enviando ${selection}`
-await conn.sendMessage(m.chat, { image: { url: `${video.thumbnail}` }, caption: ytMsg }, { quoted: m })
-await conn.sendMessage(m.chat, { audio: { url: audioUrl }, mimetype: 'audio/mpeg' }, { quoted: m })
-}
-break
-case 'video': {
-const videodl = await youtubedl(url).catch(async _ => await youtubedlv2(url));
-const videoUrl = await videodl.video['360p'].download()
-const ytMsg = `\`YouTube - ${query}\`\n\nTítulo: *${video.title}*\nVistas: *${video.views}*\nDuración: *${video.timestamp}*\nEnlace: ${url}\nDescripción: ${video.description}\n\n> Enviando ${selection}`
-await conn.sendMessage(m.chat, { image: { url: `${video.thumbnail}` }, caption: ytMsg }, { quoted: m })
-await conn.sendMessage(m.chat, { video: { url: videoUrl }, caption: '`Video de YouTube`' }, { quoted: m })
-}
-break
-case 'mp3doc': {
-const mp3dl = await youtubedl(url).catch(async _ => await youtubedlv2(url));
-const mp3Url = await mp3dl.video['360p'].download()
-const ytMsg = `\`YouTube - ${query}\`\n\nTítulo: *${video.title}*\nVistas: *${video.views}*\nDuración: *${video.timestamp}*\nEnlace: ${url}\nDescripción: ${video.description}\n\n> Enviando ${selection}`
-await conn.sendMessage(m.chat, { image: { url: `${video.thumbnail}` }, caption: ytMsg }, { quoted: m })
-await conn.sendMessage(m.chat, {document: {url: mp3Url}, mimetype: 'audio/mpeg', fileName: `${query}.mp3`}, {quoted: m})
-}
-break
-case 'mp4doc': {
-const mp4dl = await youtubedl(url).catch(async _ => await youtubedlv2(url));
-const mp4Url = await mp4dl.video['360p'].download()
-const ytMsg = `\`YouTube - ${query}\`\n\nTítulo: *${video.title}*\nVistas: *${video.views}*\nDuración: *${video.timestamp}*\nEnlace: ${url}\nDescripción: ${video.description}\n\n> Enviando ${selection}`
-await conn.sendMessage(m.chat, { image: { url: `${video.thumbnail}` }, caption: ytMsg }, { quoted: m })
-await conn.sendMessage(m.chat, {document: {url: mp4Url}, mimetype: 'video/mp4', fileName: `${query}.mp4`}, {quoted: m})
-}
-break
-default:
-return m.reply('Tipo de media no válido. Por favor, usa `audio`, `video`, `mp3doc` o `mp4doc`.')
-}
-
-} catch (e) {
-m.reply('Ocurrió un error al procesar su solicitud. ' + e)
-console.error(e)
-}
-}
-
-handler.help = ['play']
-handler.tags = ['downloader']
-handler.command = /^(play)$/i
-
+handler.help = ["play"].map(v => v + " <formato> <búsqueda>")
+handler.tags = ["downloader"]
+handler.command = ['play', 'play2', 'mp3', 'mp4', 'mp3doc', 'mp4doc']
+handler.register = true 
+handler.star = 2
 export default handler
