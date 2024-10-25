@@ -24,6 +24,19 @@ global.imagen3 = fs.readFileSync("./media/menus/img2.jpg")
 global.imagen4 = fs.readFileSync("./media/menus/img3.jpg")
 global.imagen5 = fs.readFileSync("./media/menus/img4.jpg")
 global.imagen6 = fs.readFileSync("./media/menus/img5.jpg")
+global.bermuda = fs.readFileSync("./media/menus/bermuda.jpg")
+global.purgatorio = fs.readFileSync("./media/menus/purgatorio.jpg")
+global.nexterra = fs.readFileSync("./media/menus/nexterra.jpg")
+global.alpes = fs.readFileSync("./media/menus/alpes.jpg")
+global.kalahari = fs.readFileSync("./media/menus/kalahari.jpg")
+global.agenda = fs.readFileSync("./media/menus/agenda.jpg")
+global.reglascuadri = fs.readFileSync("./media/menus/reglascuadri.jpg")
+global.vestimentacuadri = fs.readFileSync("./media/menus/vestimentacuadri.jpg")
+global.podiocuadri = fs.readFileSync("./media/menus/podiocuadri.jpg")
+global.reglasclk = fs.readFileSync("./media/menus/reglasclk.jpg")
+global.reglaslideres = fs.readFileSync("./media/menus/reglaslideres.jpg")
+global.combode = fs.readFileSync("./media/menus/combode.jpg")
+global.combobr = fs.readFileSync("./media/menus/combobr.jpg")
 global.imagen7 = fs.readFileSync("./media/menus/img6.jpg")
 global.imagen8 = fs.readFileSync("./media/menus/img7.jpg")
 global.imagen9 = fs.readFileSync("./media/menus/img8.jpg")
@@ -32,20 +45,7 @@ global.imagen11 = fs.readFileSync("./media/menus/img10.jpg")
 global.imagen12 = fs.readFileSync("./media/menus/img11.jpg")
 global.imagen13 = fs.readFileSync("./media/menus/img12.jpg")
 
-//freefire
-global.bermuda = fs.readFileSync("./media/menus/bermuda.jpg");
-global.purgatorio = fs.readFileSync("./media/menus/purgatorio.jpg");
-global.nexterra = fs.readFileSync("./media/menus/nexterra.jpg");
-global.alpes = fs.readFileSync("./media/menus/alpes.jpg");
-global.kalahari = fs.readFileSync("./media/menus/kalahari.jpg");
-global.agenda = fs.readFileSync("./media/menus/agenda.jpg");
-global.reglascuadri = fs.readFileSync("./media/menus/reglascuadri.jpg");
-global.vestimentacuadri = fs.readFileSync("./media/menus/vestimentacuadri.jpg");
-global.podiocuadri = fs.readFileSync("./media/menus/podiocuadri.jpg");
-global.reglasclk = fs.readFileSync("./media/menus/reglasclk.jpg");
-global.reglaslideres = fs.readFileSync("./media/menus/reglaslideres.jpg");
-global.combode = fs.readFileSync("./media/menus/combode.jpg");
-global.combobr = fs.readFileSync("./media/menus/combobr.jpg");
+
 
   
 global.img = 'https://qu.ax/vZii.jpg'
