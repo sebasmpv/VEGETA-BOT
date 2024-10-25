@@ -1427,7 +1427,7 @@ case 'remove':
 if (chat.welcome) {
 let groupMetadata = await this.groupMetadata(id) || (conn.chats[id] || {}).metadata
 for (let user of participants) {
-let pp = elite.getRandom()
+let pp = global.elite
 try {
 pp = await this.profilePictureUrl(user, 'image')
 } catch (e) {
