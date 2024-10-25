@@ -1,90 +1,118 @@
-import fetch from 'node-fetch';
-import yts from 'yt-search';
-import ytdl from 'ytdl-core';
-import axios from 'axios';
-import {youtubedl, youtubedlv2} from '@bochilteam/scraper';
-const handler = async (m, {conn, command, args, text, usedPrefix}) => {
-if (!text) throw `${lenguajeGB['smsAvisoMG']()}${mid.smsMalused4}\n*${usedPrefix + command} Billie Eilish - Bellyache*`
-try { 
-const yt_play = await search(args.join(' '))
-const texto1 = `*𓆩 𓃠 𓆪 ✧═══ ${vs} ═══✧ 𓆩 𓃠 𓆪*
 
-ও ${mid.smsYT1}
-» ${yt_play[0].title}
-﹘﹘﹘﹘﹘﹘﹘﹘﹘﹘﹘﹘
-ও ${mid.smsYT15}
-» ${yt_play[0].ago}
-﹘﹘﹘﹘﹘﹘﹘﹘﹘﹘﹘﹘
-ও ${mid.smsYT5}
-» ${secondString(yt_play[0].duration.seconds)}
-﹘﹘﹘﹘﹘﹘﹘﹘﹘﹘﹘﹘
-ও  ${mid.smsYT10}
-» ${MilesNumber(yt_play[0].views)}
-﹘﹘﹘﹘﹘﹘﹘﹘﹘﹘﹘﹘
-ও  ${mid.smsYT2}
-» ${yt_play[0].author.name}
-﹘﹘﹘﹘﹘﹘﹘﹘﹘﹘﹘﹘
-ও ${mid.smsYT4}
-» ${yt_play[0].url}
+/*import yts from 'yt-search';
+let handler = async (m, { conn, usedPrefix, text, args, command }) => {
+    if (!text) throw `Ejemplo de uso *${usedPrefix + command}* Lil Peep hate my life`;
+    m.react('📀');
+    
+    let result = await yts(text);
+    let ytres = result.videos;
+    
 
-*𓆩 𓃠 𓆪 ✧═══ ${vs} ═══✧ 𓆩 𓃠 𓆪*`.trim()
+    let listSections = [];
+    for (let index in ytres) {
+        let v = ytres[index];
+        listSections.push({
+            title: `${index}┃ ${v.title}`,
+            rows: [
+                {
+                    header: '🎶 MP3',
+                    title: "",
+                    description: `▢ ⌚ *Duración:* ${v.timestamp}\n▢ 👀 *Vistas:* ${v.views}\n▢ 📌 *Titulo* : ${v.title}\n▢ 📆 *Fecha:* ${v.ago}\n`, 
+                    id: `${usedPrefix}yta ${v.url}`
+                },
+                {
+                    header: "🎥 MP4",
+                    title: "" ,
+                    description: `▢ ⌚ *Duración:* ${v.timestamp}\n▢ 👀 *Vistas:* ${v.views}\n▢ 📌 *Titulo* : ${v.title}\n▢ 📆 *Fecha:* ${v.ago}\n`, 
+                    id: `${usedPrefix}ytv ${v.url}`
+                }
+            ]
+        });
+    }
 
-await conn.sendButton(m.chat, wm, texto1, yt_play[0].thumbnail, [['𓃠 𝗔 𝗨 𝗗 𝗜 𝗢', `${usedPrefix}ytmp3 ${yt_play[0].url}`], ['𓃠 𝗩 𝗜 𝗗 𝗘 𝗢', `${usedPrefix}ytmp4 ${yt_play[0].url}`], ['𝗠 𝗘 𝗡 𝗨 ☘️', `${usedPrefix}menu`]], null, null, m)
+    await conn.sendList(m.chat, '  * YOYTUBE - DL*', `\n 🍟 Resultados de:\n *${text}*`, `Click Aqui`, ytres[0].image, listSections, m);
+};
 
+handler.help = ['play2']
+handler.tags = ['dl']
+handler.command = ['play2', 'Play', 'playlist', 'playlista'] 
+handler.disabled = false
 
-let listSections = [];             
-listSections.push({
-title: comienzo + ' 📡 𝗧𝗜𝗣𝗢𝗦 𝗗𝗘 𝗗𝗘𝗦𝗖𝗔𝗥𝗚𝗔𝗦 ' + fin,
-rows: [{ header: "𓃠 𝗔 𝗨 𝗗 𝗜 𝗢 (Opcion 1)", title: "", id: `${usedPrefix}ytmp3 ${yt_play[0].url}`, description: `${yt_play[0].title}\n` }, 
-{ header: "𓃠 𝗔 𝗨 𝗗 𝗜 𝗢 (Opcion 2)", title: "", id: `${usedPrefix}play.1 ${yt_play[0].url}`, description: `${yt_play[0].title}\n` },
-{ header: "𓃠 𝗔 𝗨 𝗗 𝗜 𝗢   𝗗 𝗢 𝗖", title: "", id: `${usedPrefix}ytmp3doc ${yt_play[0].url}`, description: `${yt_play[0].title}\n` },
-{ header: "𓃠 𝗩 𝗜 𝗗 𝗘 𝗢 (Opcion 1)", title: "", id: `${usedPrefix}ytmp4 ${yt_play[0].url}`, description: `${yt_play[0].title}\n` },
-{ header: "𓃠 𝗩 𝗜 𝗗 𝗘 𝗢 (Opcion 2)", title: "", id: `${usedPrefix}play.2 ${yt_play[0].url}`, description: `${yt_play[0].title}\n` },
-{header: "𓃠 𝗩 𝗜 𝗗 𝗘 𝗢   𝗗 𝗢 𝗖", title: "", id: `${usedPrefix}ytmp4doc ${yt_play[0].url}`, description: `${yt_play[0].title}\n`}
-]});
+export default handler*/
 
-/*listSections.push({
-  text: `*𝙀𝙇𝙄𝙅𝘼 𝙌𝙐𝙀 𝙑𝘼 𝙃𝘼𝘾𝙀𝙍 𝘾𝙊𝙉  ${text}*`,
-  footer: global.wm,
-  title: `${htki} *♻️ 𝘿𝙀𝙎𝘾𝘼𝙍𝙂𝘼𝙎* ${htka}`,
-  buttonText: `🍄 𝙀𝙇𝙀𝙂𝙄𝙍 🍁`,
-  sections
-}) */
+import yts from 'yt-search'
+import { youtubedl, youtubedlv2 } from '@bochilteam/scraper'
 
-await conn.sendList(m.chat, `*𝙀𝙇𝙄𝙅𝘼 𝙌𝙐𝙀 𝙑𝘼 𝙃𝘼𝘾𝙀𝙍 𝘾𝙊𝙉  ${text}*`, `\n${htki} *♻️ 𝘿𝙀𝙎𝘾𝘼𝙍𝙂𝘼𝙎* ${htka}`, `🍄 𝙀𝙇𝙀𝙂𝙄𝙍 🍁`, listSections, {quoted: fkontak});
+const handler = async (m, { conn, text, args }) => {
+if (!text) {
+return m.reply('*Ingrese el título de un vídeo junto al tipo de media que desea recibir*\n\nPor ejemplo: `!play audio Those Eyes`\n\n> Tipos de media: `audio`, `video`, `mp3doc`, `mp4doc`')
+}
+
+const parts = text.split(' ')
+const selection = parts.shift().toLowerCase()
+const query = parts.join(' ')
+
+try {
+if (query.length === 0) {
+return m.reply('Parece faltar el título del vídeo')
+}
+m.reply(wait)
+var search = await yts(query)
+var videos = search.videos
+
+if (videos.length === 0) {
+return m.reply('No se encontraron videos para el término de búsqueda proporcionado.')
+}
+const video = videos[0]
+const url = video.url
+let dl_url, mimeType, videoUrl
+
+switch (selection) {
+case 'audio': {
+let c = '360' + 'p'
+const audiodl = await youtubedl(url).catch(async _ => await youtubedlv2(url));
+const audioUrl = await audiodl.video[c].download()
+const ytMsg = `\`YouTube - ${query}\`\n\nTítulo: *${video.title}*\nVistas: *${video.views}*\nDuración: *${video.timestamp}*\nEnlace: ${url}\nDescripción: ${video.description}\n\n> Enviando ${selection}`
+await conn.sendMessage(m.chat, { image: { url: `${video.thumbnail}` }, caption: ytMsg }, { quoted: m })
+await conn.sendMessage(m.chat, { audio: { url: audioUrl }, mimetype: 'audio/mpeg' }, { quoted: m })
+}
+break
+case 'video': {
+const videodl = await youtubedl(url).catch(async _ => await youtubedlv2(url));
+const videoUrl = await videodl.video['360p'].download()
+const ytMsg = `\`YouTube - ${query}\`\n\nTítulo: *${video.title}*\nVistas: *${video.views}*\nDuración: *${video.timestamp}*\nEnlace: ${url}\nDescripción: ${video.description}\n\n> Enviando ${selection}`
+await conn.sendMessage(m.chat, { image: { url: `${video.thumbnail}` }, caption: ytMsg }, { quoted: m })
+await conn.sendMessage(m.chat, { video: { url: videoUrl }, caption: '`Video de YouTube`' }, { quoted: m })
+}
+break
+case 'mp3doc': {
+const mp3dl = await youtubedl(url).catch(async _ => await youtubedlv2(url));
+const mp3Url = await mp3dl.video['360p'].download()
+const ytMsg = `\`YouTube - ${query}\`\n\nTítulo: *${video.title}*\nVistas: *${video.views}*\nDuración: *${video.timestamp}*\nEnlace: ${url}\nDescripción: ${video.description}\n\n> Enviando ${selection}`
+await conn.sendMessage(m.chat, { image: { url: `${video.thumbnail}` }, caption: ytMsg }, { quoted: m })
+await conn.sendMessage(m.chat, {document: {url: mp3Url}, mimetype: 'audio/mpeg', fileName: `${query}.mp3`}, {quoted: m})
+}
+break
+case 'mp4doc': {
+const mp4dl = await youtubedl(url).catch(async _ => await youtubedlv2(url));
+const mp4Url = await mp4dl.video['360p'].download()
+const ytMsg = `\`YouTube - ${query}\`\n\nTítulo: *${video.title}*\nVistas: *${video.views}*\nDuración: *${video.timestamp}*\nEnlace: ${url}\nDescripción: ${video.description}\n\n> Enviando ${selection}`
+await conn.sendMessage(m.chat, { image: { url: `${video.thumbnail}` }, caption: ytMsg }, { quoted: m })
+await conn.sendMessage(m.chat, {document: {url: mp4Url}, mimetype: 'video/mp4', fileName: `${query}.mp4`}, {quoted: m})
+}
+break
+default:
+return m.reply('Tipo de media no válido. Por favor, usa `audio`, `video`, `mp3doc` o `mp4doc`.')
+}
+
 } catch (e) {
-await conn.reply(m.chat, `${lenguajeGB['smsMalError3']()}#report ${lenguajeGB['smsMensError2']()} ${usedPrefix + command}\n\n${wm}`, fkontak, m)
-console.log(`❗❗ ${lenguajeGB['smsMensError2']()} ${usedPrefix + command} ❗❗`)
-console.log(e)
-handler.limit = 0
-}}
-handler.command = ['play', 'play2', 'play3', 'play4']
-//handler.limit = 3
-//handler.register = true 
-export default handler;
-
-async function search(query, options = {}) {
-const search = await yts.search({query, hl: 'es', gl: 'ES', ...options});
-return search.videos;
+m.reply('Ocurrió un error al procesar su solicitud. ' + e)
+console.error(e)
+}
 }
 
-function MilesNumber(number) {
-const exp = /(\d)(?=(\d{3})+(?!\d))/g;
-const rep = '$1.';
-const arr = number.toString().split('.');
-arr[0] = arr[0].replace(exp, rep);
-return arr[1] ? arr.join('.') : arr[0];
-}
+handler.help = ['play']
+handler.tags = ['downloader']
+handler.command = /^(play)$/i
 
-function secondString(seconds) {
-seconds = Number(seconds);
-const d = Math.floor(seconds / (3600 * 24));
-const h = Math.floor((seconds % (3600 * 24)) / 3600);
-const m = Math.floor((seconds % 3600) / 60);
-const s = Math.floor(seconds % 60);
-const dDisplay = d > 0 ? d + (d == 1 ? ' día, ' : ' días, ') : '';
-const hDisplay = h > 0 ? h + (h == 1 ? ' hora, ' : ' horas, ') : '';
-const mDisplay = m > 0 ? m + (m == 1 ? ' minuto, ' : ' minutos, ') : '';
-const sDisplay = s > 0 ? s + (s == 1 ? ' segundo' : ' segundos') : '';
-return dDisplay + hDisplay + mDisplay + sDisplay;
-}
+export default handler
