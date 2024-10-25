@@ -1412,22 +1412,22 @@ function pickRandom(list) { return list[Math.floor(Math.random() * list.length)]
  * @param {import('@adiwajshing/baileys').BaileysEventMap<unknown>['group-participants.update']} groupsUpdate 
  */
 export async function participantsUpdate({ id, participants, action }) {
-if (opts['self'])
-return
-// if (id in conn.chats) return // First login will spam
-if (this.isInit)
-return
-if (global.db.data == null)
-await loadDatabase()
-let chat = global.db.data.chats[id] || {}
-let text = ''
-switch (action) {
-case 'add':
+    if (opts['self'])
+        return
+    // if (id in conn.chats) return // First login will spam
+    if (this.isInit)
+        return
+    if (global.db.data == null)
+        await loadDatabase()
+    let chat = global.db.data.chats[id] || {}
+    let text = ''
+    switch (action) {
+        case 'add':
 case 'remove':
 if (chat.welcome) {
 let groupMetadata = await this.groupMetadata(id) || (conn.chats[id] || {}).metadata
 for (let user of participants) {
-let pp = global.gataImg
+let pp = gataMenu.getRandom()
 try {
 pp = await this.profilePictureUrl(user, 'image')
 } catch (e) {
@@ -1435,7 +1435,7 @@ pp = await this.profilePictureUrl(user, 'image')
 let apii = await this.getFile(pp)                                      
 const botTt2 = groupMetadata.participants.find(u => this.decodeJid(u.id) == this.user.jid) || {} 
 const isBotAdminNn = botTt2?.admin === "admin" || false
-text = (action === 'add' ? (chat.sWelcome || this.welcome || conn.welcome || 'Welcome, @user!').replace('@subject', await this.getName(id)).replace('@desc', groupMetadata.desc?.toString() || 'SIN DESCRIPCIÓN') :
+text = (action === 'add' ? (chat.sWelcome || this.welcome || conn.welcome || 'Welcome, @user!').replace('@subject', await this.getName(id)).replace('@desc', groupMetadata.desc?.toString() || '𝑆𝐼𝑁 𝐷𝐸𝑆𝐶𝑅𝐼𝑃𝐶𝐼𝑂́𝑁 ') :
 (chat.sBye || this.bye || conn.bye || 'Bye, @user!')).replace('@user', '@' + user.split('@')[0])
 			    
 if (chat.antifake && isBotAdminNn && action === 'add') {
