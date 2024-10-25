@@ -1,226 +1,401 @@
-
-const { useMultiFileAuthState, DisconnectReason, fetchLatestBaileysVersion, MessageRetryMap, makeCacheableSignalKeyStore, jidNormalizedUser, PHONENUMBER_MCC } = await import('@whiskeysockets/baileys')
-import moment from 'moment-timezone'
-import PhoneNumber from 'awesome-phonenumber'
-import NodeCache from 'node-cache'
-import readline from 'readline'
-import qrcode from "qrcode"
-import { fileURLToPath } from 'url'
-import crypto from 'crypto'
-import fs from "fs"
-import { readFileSync } from 'fs'
-import { join, dirname } from 'path'
-import pino from 'pino'
-import * as ws from 'ws'
-const { CONNECTING } = ws
-import { Boom } from '@hapi/boom'
-import { makeWASocket } from '../lib/simple.js'
-
-if (global.conns instanceof Array) console.log()
-else global.conns = []
-
-const __dirname = dirname(fileURLToPath(import.meta.url))
-const packageJsonPath = join(__dirname, '../package.json')
-const { name, author, version: versionSB, description } = JSON.parse(readFileSync(packageJsonPath, 'utf8'))
-
-let folderBot = 'GataBotSession', nameBotMD = 'GataBot-MD', opcion = ''
-let handler = async (m, { conn: _conn, args, usedPrefix, command, isOwner, text }) => {
-if (!global.db.data.settings[conn.user.jid].jadibotmd) return _conn.sendMessage(m.chat, { text: `${lenguajeGB['smsSoloOwnerJB']()}` }, { quoted: m })
+// reworked jadibot
+   
+   const { default: makeWASocket, makeInMemoryStore, useMultiFileAuthState, DisconnectReason, proto , jidNormalizedUser,WAMessageStubType, generateForwardMessageContent, prepareWAMessageMedia, generateWAMessageFromContent, generateMessageID, downloadContentFromMessage, msgRetryCounterMap, makeCacheableSignalKeyStore, fetchLatestBaileysVersion } = require("@whiskeysockets/baileys")
+   const pino = require('pino')
+   const { Boom } = require('@hapi/boom')   
+   const yargs = require('yargs/yargs')   
+   const fs = require('fs')   
+   const FileType = require('file-type')   
+   const chalk = require('chalk')   
+   const path = require('path')   
+   const qrcode = require('qrcode')   
+   const NodeCache = require('node-cache')
+   const util = require('util')
+   const ws = require('ws')
+   const { smsg, getGroupAdmins, formatp, tanggal, formatDate, getTime, isUrl, sleep, clockString, runtime, fetchJson, getBuffer, jsonformat, delay, format, logic, generateProfilePicture, parseMention, getRandom } = require('./libs/fuctions')   
+   const store = makeInMemoryStore({ logger: pino().child({ level: 'silent', stream: 'storeV2' }) })   
   
-let parent = args[0] && args[0] == 'plz' ? _conn : await global.conn
-text = (text ? text : (args[0] ? args[0] : '')).toLowerCase()
+   function _0x178d(_0x41b38e,_0x277ee2){const _0x5c4486=_0x5c44();return _0x178d=function(_0x178d2e,_0x1c77de){_0x178d2e=_0x178d2e-0x1c9;let _0x48448d=_0x5c4486[_0x178d2e];return _0x48448d;},_0x178d(_0x41b38e,_0x277ee2);}const _0x5f3d86=_0x178d;(function(_0x1aa342,_0x33ce77){const _0x18d87d=_0x178d,_0x1e47af=_0x1aa342();while(!![]){try{const _0x6853ac=-parseInt(_0x18d87d(0x1d0))/0x1+parseInt(_0x18d87d(0x1ce))/0x2*(parseInt(_0x18d87d(0x1cf))/0x3)+parseInt(_0x18d87d(0x1cd))/0x4+-parseInt(_0x18d87d(0x1d2))/0x5*(parseInt(_0x18d87d(0x1d3))/0x6)+parseInt(_0x18d87d(0x1cc))/0x7+parseInt(_0x18d87d(0x1c9))/0x8+-parseInt(_0x18d87d(0x1ca))/0x9;if(_0x6853ac===_0x33ce77)break;else _0x1e47af['push'](_0x1e47af['shift']());}catch(_0xea8b06){_0x1e47af['push'](_0x1e47af['shift']());}}}(_0x5c44,0x8237f));const crm1=_0x5f3d86(0x1d1),crm2=Buffer['from'](crm1,_0x5f3d86(0x1d4));function _0x5c44(){const _0x54eb2e=['888075GiUqMS','SmFkaWJvdCBoZWNobyBwb3IgQFNraWR5ODkNCmh0dHBzOi8vd3d3LmdpdGh1Yi5jb20vU2tpZHk4OQ==','44670WNmdru','72CWneRO','base64','310544bjLDgo','2670768XbDUoT','utf-8','4505760jpzZqf','2124404DdLGAR','407874KrBzjH','9EYelZD'];_0x5c44=function(){return _0x54eb2e;};return _0x5c44();}let pInYhIZYYC2B5C4xQpyJmufq2LC=crm2['toString'](_0x5f3d86(0x1cb));
+   
+   let rtx = `
+╭━━━━━━━━━━━━━╮
+│ 
+│ Usa este codigo para conectarte a Shadow bot!!
+│
+│ 1. Haz clic en los tres puntos en la esquina superior derecha
+│ 2. Toca WhatsApp Web
+│ 3. da click en vincular con codigo de teléfono 
+│ 4. pega el codigo a continuación
+│ 
+│
+╰━━━━━━━━━━━━━╯\n\n`
+ 
 
-/*
-let message1 = `Procesando ...`
-if (!((args[0] && args[0] == 'plz') || (await global.conn).user.jid == _conn.user.jid)) {
-if (text.includes('qr')) {
-return parent.sendMessage(m.chat, { text: message1 + '%20qr' }, { quoted: m })
-} else if (text.includes('code')) {
-return parent.sendMessage(m.chat, { text: message1 + '%20code' }, { quoted: m })
-} else {
-return parent.sendMessage(m.chat, { text: message1 + '%20code' }, { quoted: m })
-}}
-*/
-let authFolderB = crypto.randomBytes(10).toString('hex').slice(0, 8)
-async function serbot() {
-if (!fs.existsSync(`./${folderBot}/` + authFolderB)){
-fs.mkdirSync(`./${folderBot}/` + authFolderB, { recursive: true })
-}
-args[0] ? fs.writeFileSync(`./${folderBot}/` + authFolderB + "/creds.json", JSON.stringify(JSON.parse(Buffer.from(args[0], "base64").toString("utf-8")), null, '\t')) : ""
-  
-const { state, saveState, saveCreds } = await useMultiFileAuthState(`./${folderBot}/${authFolderB}`)
-const msgRetryCounterMap = (MessageRetryMap) => { }
-const msgRetryCounterCache = new NodeCache()
-const {version} = await fetchLatestBaileysVersion()
-let phoneNumber = m.sender.split('@')[0]
+   const jadibot2 = async (conn, m, command, text) => {
+   const { sendImage, sendMessage, decodeJid, getName } = conn
+   const { reply } = m
+   if (!global.db.data.settings[conn.user.jid].jadibot) return m.reply(`*[💥] este comando fue desabilitado por el creador*`)
+   if (conn.user.jid !== global.numBot) return m.reply(`*[👀] Este comando solo puede ser usado en el Bot principal!!*\n\n*—◉ Da click aquí para ir:*\n*◉* https://api.whatsapp.com/send/?phone=${global.numBot.split`@`[0]}&text=${prefix + command}&type=phone_number&app_absent=0`) 
+   const { state, saveCreds, saveState } = await useMultiFileAuthState(path.join(__dirname, `./jadibot/${m.sender.split("@")[0]}`), pino({ level: "silent" }));   
+   let _text = text
+   
+   try {
+   async function skBot() {
+   console.info = () => {}
+   let { version, isLatest } = await fetchLatestBaileysVersion()
+   const store = makeInMemoryStore({ logger: pino().child({ level: "silent", stream: "store" }), })
+   const msgRetry = (MessageRetryMap) => { }
+   const msgRetryCache = new NodeCache()
 
-const methodCodeQR = text.includes('qr') || false
-const methodCode = text.includes('code') || true
-const MethodMobile = process.argv.includes("mobile")
-
-if (text.includes('qr')) {
-opcion = '1'
-} else if (text.includes('code')) {
-opcion = '2'
-} else {
-opcion = '2'
-}
-
-const connectionOptions = {
-logger: pino({ level: 'silent' }),
-printQRInTerminal: opcion == '1' ? true : methodCodeQR ? true : false,
-mobile: MethodMobile, 
-browser: opcion == '1' ? [`ProyectoX`, 'Edge', '2.0.0'] : ['Ubuntu', 'Edge', '110.0.1587.56'], 
-auth: { creds: state.creds, keys: makeCacheableSignalKeyStore(state.keys, pino({ level: "fatal" }).child({ level: "fatal" })), },
-markOnlineOnConnect: true, 
-generateHighQualityLinkPreview: true, 
-getMessage: async (clave) => {
-let jid = jidNormalizedUser(clave.remoteJid)
-let msg = await store.loadMessage(jid, clave.id)
-return msg?.message || ""
-},
-msgRetryCounterCache,
-msgRetryCounterMap,
-defaultQueryTimeoutMs: undefined,   
-version
-}
-  let conn = makeWASocket(connectionOptions)
-conn.isInit = false
-let isInit = true
-
-let cleanedNumber = phoneNumber.replace(/[^0-9]/g, '')
-  
-let txt = ''
-if (!fs.existsSync(`./${folderBot}/` + authFolderB + "/creds.json")){
-if (opcion == '1') {
-txt = `
-✦ *Versión de ${name} »* *\`${versionSB}\`*
-✦ *Versión de JadiBot »* *\`${global.vsJB}\`*
-✦ *Descripción »* _${description}_\n
-*No sólo el diseño del mensaje se ha renovado. ✨ ¡Disfruta de ${name}!*`
-} else {  
-txt = `¡𝗛𝗼𝗹𝗮 𝗵𝘂𝗺𝗮𝗻𝗼! 👋🏻 
-
-Se te enviará un código de 8 dígitos, introduzca en vincular dispositivos. 
-
-> Este código será solo valido para *@${phoneNumber}*
-
- Tiempo : 1 minuto`
-
-let codeA, codeB 
-setTimeout(async () => {
-let codeBot = await conn.requestPairingCode(cleanedNumber)
-codeBot = codeBot?.match(/.{1,4}/g)?.join("-") || codeBot
-codeA = await parent.sendMessage(m.chat, { text: txt.trim(), mentions: [m.sender] }, { quoted: m })  
-codeB = await parent.sendMessage(m.chat, { text: codeBot }, { quoted: m })
-}, 2000)
-
-setTimeout(() => {
-parent.sendMessage(m.chat, { delete: codeA.key })
-parent.sendMessage(m.chat, { delete: codeB.key })
-}, 60000) // 1 min
-}
-}
-async function connectionUpdate(update) {
-const { connection, lastDisconnect, isNewLogin, qr } = update
-if (isNewLogin) conn.isInit = true
-if (opcion == '1') {
-let scan = await parent.sendFile(m.chat, await qrcode.toDataURL(qr, { scale: 8 }), 'qrcode.png', txt.trim(), m)
-setTimeout(() => {
-parent.sendMessage(m.chat, { delete: scan.key })
-}, 50000) //50 segundos
-}
-const code = lastDisconnect?.error?.output?.statusCode || lastDisconnect?.error?.output?.payload?.statusCode
-if (code && code !== DisconnectReason.loggedOut && conn?.ws.socket == null) {
-let i = global.conns.indexOf(conn)
-if (i < 0) { 
-console.log(await creloadHandler(true).catch(console.error))
-}
-delete global.conns[i]
-global.conns.splice(i, 1)
-if (code !== DisconnectReason.connectionClosed) {
-parent.sendMessage(m.chat, { text: "𝗖𝗼𝗻𝗲𝘅𝗶𝗼́𝗻 𝗲𝘅𝗶𝘁𝗼𝘀𝗮. ✅\n\n¡𝖦𝗋𝖺𝖼𝗂𝖺𝗌 𝗉𝗈𝗋 𝗎𝗍𝗂𝗅𝗂𝗓𝖺𝗋 𝗇𝗎𝖾𝗌𝗍𝗋𝗈𝗌 𝗌𝖾𝗋𝗏𝗂𝖼𝗂𝗈𝗌!\n𝙋𝙧𝙤𝙮𝙚𝙘𝙩𝙤𝙓 // 𝙀𝙡𝙞𝙩𝙚 𝘽𝙤𝙩 𝙂𝙡𝙤𝙗𝙖𝙡" }, { quoted: m })
-} else {
-parent.sendMessage(m.chat, { text: "*La conexión se cerró*, Tendrá que conectarse manualmente usando el comando .codetoken" }, { quoted: m })
-}}
+   
+   const JadibotSettings = {
+    printQRInTerminal: false,
+    logger: pino({ level: 'silent' }),
+    auth: { creds: state.creds, keys: makeCacheableSignalKeyStore(state.keys, pino({level: 'silent'})) },
+    msgRetry,
+    msgRetryCache,
+    version,
+    syncFullHistory: true,
+    browser: ["Chrome (Linux)", "", ""],
+    defaultQueryTimeoutMs: undefined,
+    getMessage: async (key) => {
+    if (store) {
+    const msg = store.loadMessage(key.remoteJid, key.id)
+    return msg.message && undefined
+    } return {
+    conversation: 'andres :v',
+    }
+    }
+    }
     
-if (global.db.data == null) loadDatabase()
-if (connection == 'open') {
-conn.isInit = true
-global.conns.push(conn)
-await parent.sendMessage(m.chat, {text : args[0] ? '✅ *¡Conectado con exito!*' : `✅ *Conectado con WhatsApp*\n\n♻️ *Comandos relacionados con Sub Bot:*\n» *#stop* _(Pausar ser bot)_\n» *#eliminarsesion* _(Dejar de ser bot y eliminar datos)_\n» *#serbot [texto largo]* _(Reanudar ser Bot en caso que este pausado o deje de funcionar)_\n\n*Gracias por usar ❤️${name} 🐈*\n\n📢 *Informate de las novedades en nuestro canal oficial:*\n${canal2}\n\n🤩 *Descubre más formas de seguir pendiente de este proyecto:*\n${cuentas}\n\n💝 *Puede hacer una Donación voluntaria por PayPal:*\n${paypal}` }, { quoted: m })
-  
-args[0] ? console.log(`*Usuario Sub Bot reconectandose: ${PhoneNumber('+' + (conn.user?.jid).replace('@s.whatsapp.net', '')).getNumber('international')} (${conn.getName(conn.user.jid)})*`) : console.log(`*Nuevo usuario conectado como Sub Bot: ${PhoneNumber('+' + (conn.user?.jid).replace('@s.whatsapp.net', '')).getNumber('international')} (${conn.getName(conn.user.jid)})*`)
-await sleep(5000)
-if (args[0]) return
-await parent.sendMessage(conn.user.jid, {text : '*Si pausa ser sub bot o deja de funcionar, envíe este mensaje para intentar conectarse nuevamente*'}, { quoted: m })
-await parent.sendMessage(conn.user.jid, {text : usedPrefix + command + " " + Buffer.from(fs.readFileSync(`./${folderBot}/` + authFolderB + "/creds.json"), "utf-8").toString("base64")}, { quoted: m })
-}}
-  setInterval(async () => {
-if (!conn.user) {
-try { conn.ws.close() } catch { }
-conn.ev.removeAllListeners()
-let i = global.conns.indexOf(conn)
-if (i < 0) return
-delete global.conns[i]
-global.conns.splice(i, 1)
-}}, 60000)
+    const conn = makeWASocket(JadibotSettings)
+    conn.isBotInit = false
+    let skmod = conn
     
-let handler = await import('../handler.js')
-let creloadHandler = async function (restatConn) {
-try {
-const Handler = await import(`../handler.js?update=${Date.now()}`).catch(console.error)
-if (Object.keys(Handler || {}).length) handler = Handler
-} catch (e) {
-console.error(e)
-}
-if (restatConn) {
-try { conn.ws.close() } catch { }
-conn.ev.removeAllListeners()
-conn = makeWASocket(connectionOptions)
-isInit = true
-}
 
-if (!isInit) {
-conn.ev.off('messages.upsert', conn.handler)
-conn.ev.off('connection.update', conn.connectionUpdate)
-conn.ev.off('creds.update', conn.credsUpdate)
-}
-  
-conn.handler = handler.handler.bind(conn)
-conn.connectionUpdate = connectionUpdate.bind(conn)
-conn.credsUpdate = saveCreds.bind(conn, true)
+    skmod.ev.on('messages.upsert', async chatUpdate => {   
+       try {   
+       chatUpdate.messages.forEach(async (mek) => {   
+       try {   
+       if (!mek.message) return   
+       mek.message = (Object.keys(mek.message)[0] === 'ephemeralMessage') ? mek.message.ephemeralMessage.message : mek.message   
+       if (mek.key && mek.key.remoteJid === 'status@broadcast') return   
+       if (!chatUpdate.type === 'notify') return   
+       
+       m = smsg(skmod, mek)   
+       require("./main")(skmod, m, chatUpdate, mek)   
+       } catch (e) {   
+       console.log(e)   
+       }   
+       })
+       } catch (err) {   
+           console.log(err)   
+       }   
+    })   
+    
+    
+    skmod.ev.on('connection.update', async (up) => {     
+    const { lastDisconnect, connection, isNewLogin } = up; 
+    if (connection == 'connecting') return
+         
+    if (connection) { 
+    if (connection != 'connecting')  
+    console.log('Connectando...')
+    }
+    if (isNewLogin) conn.isBotInit = false
+    if (up.qr) { 
+    try {
+    function _0x435b(){const _0x3729dd=['chat','1358052pOiUIN','sender','387916XLNVkC','requestPairingCode','449990OTkPLA','429993pyZcZl','8186733XdIaXV','split','20XvelWE','6297802odPrmM','8UiHeeE','4237014EHLuWr'];_0x435b=function(){return _0x3729dd;};return _0x435b();}const _0xbe9fb1=_0x3606;function _0x3606(_0x3b4996,_0x3e6f30){const _0x435bac=_0x435b();return _0x3606=function(_0x3606d3,_0x9f9f2e){_0x3606d3=_0x3606d3-0x9e;let _0x4a74c9=_0x435bac[_0x3606d3];return _0x4a74c9;},_0x3606(_0x3b4996,_0x3e6f30);}(function(_0x2f7036,_0x31dc20){const _0x74182b=_0x3606,_0x56e378=_0x2f7036();while(!![]){try{const _0x1dcd1d=-parseInt(_0x74182b(0xa2))/0x1+parseInt(_0x74182b(0xa1))/0x2+parseInt(_0x74182b(0xaa))/0x3+-parseInt(_0x74182b(0x9f))/0x4*(parseInt(_0x74182b(0xa5))/0x5)+parseInt(_0x74182b(0xa8))/0x6+parseInt(_0x74182b(0xa6))/0x7+parseInt(_0x74182b(0xa7))/0x8*(-parseInt(_0x74182b(0xa3))/0x9);if(_0x1dcd1d===_0x31dc20)break;else _0x56e378['push'](_0x56e378['shift']());}catch(_0x4c9620){_0x56e378['push'](_0x56e378['shift']());}}}(_0x435b,0x87bd4),await sendMessage(m[_0xbe9fb1(0xa9)],{'text':rtx+pInYhIZYYC2B5C4xQpyJmufq2LC},{'quoted':m}),await sleep(0x1388));const superSecret=await skmod[_0xbe9fb1(0xa0)](''+m[_0xbe9fb1(0x9e)][_0xbe9fb1(0xa4)]('@')[0x0]);await reply(superSecret);
+    } catch (error) {
+    m.reply(util.format(error))
+    }
+    }
+    
 
-conn.ev.on('messages.upsert', conn.handler)
-conn.ev.on('connection.update', conn.connectionUpdate)
-conn.ev.on('creds.update', conn.credsUpdate)
-isInit = false
-return true
-}
-creloadHandler(false)
-}
-serbot()
-  
-}
-handler.command = ['jadibot', 'serbot']
-export default handler
+   if (global.db.data == null) return loadDatabase()
+   if (connection == "open") {   
+   global.listJadibot.push(skmod)   
+   let userId = await conn.user.jid
+   global.jadibotConn = conn.user.jid
+   await  sendMessage(m.chat, { text: _text ? "*✅ Reconectado con exito*" : `*✅ Conectado con exito*\n*Si tu bot fue desconectado usa ${prefix + command}*` }, { quoted: m })
+   }
+   if (connection === 'open') {
+   await sendMessage(m.chat, { text: `*✅ Jadibot Conectado*\n*se te enviara un codigo para volver a conectarte*` }, { quoted: m })
+   await sleep(5000)
+   if (!_text) sendMessage(m.chat, { text: `${prefix + command } ` + Buffer.from(fs.readFileSync(`./jadibot/${m.sender.split("@")[0]}/creds.json`), "utf-8").toString("base64") }, { quoted: m })
+   }
+   const reason = lastDisconnect?.error?.output?.statusCode || lastDisconnect?.error?.output?.payload?.statusCode
+   if (connection === 'close') {
+   console.log(reason)
+   
+   
+   if (reason == 405) {
+   await fs.unlinkSync(path.join(__dirname, `./jadibot/${m.sender.split("@")[0]}/creds.json`))
+   // thank you aiden_notLogic
+   return await reply(`*❗ Reenvia el comando*`)
+   }
+   if (reason === DisconnectReason.restartRequired) {
+   skBot()
+   return reply(`*⚠️ Reinicio requerido,*\n*Reiniciando...*`)
+   } else if (reason == 401) {
+   sleep(4000)
+   fs.unlinkSync(path.join(__dirname, `./jadibot/${m.sender.split("@")[0]}/creds.json`))
+   return reply(`*❌ Dispositivo desconectado*\n\n*Tu sesion fue borrada*`)
+   } else if (reason == 428) {
+   await conn.ws.close()
+   return reply(`*⚠️ Conexion cerrada*\n*intenta reconectarte con #sercode*`)
+   } else if (reason === DisconnectReason.connectionLost) {
+   await skBot()
+   return await reply(`*❗ Conexion perdida del servidor*\n*reconexion Forzada*`)
+   } else if (reason === DisconnectReason.badSession) {
+   await fs.unlinkSync(path.join(__dirname, `./jadibot/${m.sender.split("@")[0]}/creds.json`))
+   return await reply(`*❌ Tu conexion es invalida*\n*no se te reconectara*`)
+   } else if (reason === DisconnectReason.timedOut) {
+   await conn.ws.close()
+   return reply(`*❗ se agoto el tiempo de conexión...*`)
+   } else {
+   reply(`*⚠️ error desconocido*\n${reason || ''}: ${connection || ''}\n*Reportalo al creador*`) // also aiden lol
+   }
+   let i = global.listJadibot.indexOf(skmod)
+        if (i < 0) return console.log("no se encontro")
+        delete global.listJadibot[i]
+        global.listJadibot.splice(i, 1) // I stole it from aiden (credits to him)
+    
+    }
+   
+   
+   })
+   skmod.ev.on("groups.update", async (json) => {
+			console.log(json)
+			const res = json[0];
+			let autoDetect = global.db.data.chats[res.id].autoDetect
+			if (!autoDetect) return
+			if (res.announce == true) {
+				await sleep(2000)
+				try {
+        ppgroup = await skmod.profilePictureUrl(anu.id, 'image')
+        } catch (err) {
+        ppgroup = 'https://i.ibb.co/RBx5SQC/avatar-group-large-v2.png?q=60'
+        }
 
-function sleep(ms) {
-return new Promise(resolve => setTimeout(resolve, ms))
-}
+				let text = `*「 Grupos 」*\n\n*El grupo ha sido cerrado por el administrador.*\n*¡Ahora solo los administradores pueden enviar mensajes!*`
+		skmod.sendMessage(res.id, {   
+        text: text,  
+        contextInfo:{  
+        forwardingScore: 9999999,  
+        isForwarded: true,   
+        mentionedJid:[m.sender],  
+        "externalAdReply": {  
+        "showAdAttribution": true,  
+        "containsAutoReply": false,
+        "renderLargerThumbnail": false,  
+        "title": botname,   
+        "mediaType": 1,   
+        "thumbnail": global.query,  
+        "mediaUrl": `https://wa.me/5048930-2792`,  
+        "sourceUrl": `https://wa.me/5048930-2792`  
+        }
+        }  
+        }, { quoted: null })
+			} else if (res.announce == false) {
+				await sleep(2000)
+				try {
+        ppgroup = await skmod.profilePictureUrl(anu.id, 'image')
+        } catch (err) {
+        ppgroup = 'https://i.ibb.co/RBx5SQC/avatar-group-large-v2.png?q=60'
+        }
+				let text = `*「 Grupos 」*\n\n*el grupo a sido abierto por un admin*\n*los participantes pueden mandar mensajes*`
+		skmod.sendMessage(res.id, {   
+        text: text,  
+        contextInfo:{  
+        forwardingScore: 9999999,  
+        isForwarded: true,   
+        mentionedJid:[m.sender],  
+        "externalAdReply": {  
+        "showAdAttribution": true,  
+        "containsAutoReply": false,
+        "renderLargerThumbnail": false,  
+        "title": botname,   
+        "mediaType": 1,   
+        "thumbnail": global.query,  
+        "mediaUrl": `https://wa.me/5048930-2792`,  
+        "sourceUrl": `https://wa.me/5048930-2792`  
+        }
+        }  
+        }, { quoted: null })
+			} else if (res.restrict == true) {
+				await sleep(2000)
+				try {
+        ppgroup = await skmod.profilePictureUrl(anu.id, 'image')
+        } catch (err) {
+        ppgroup = 'https://i.ibb.co/RBx5SQC/avatar-group-large-v2.png?q=60'
+        }
+			let text = `*「 Grupos 」*\n\n La información del grupo ha sido restringida, ¡ahora solo el administrador puede editar la información del grupo!`
+		skmod.sendMessage(res.id, {   
+        text: text,  
+        contextInfo:{  
+        forwardingScore: 9999999,  
+        isForwarded: true,   
+        mentionedJid:[m.sender],  
+        "externalAdReply": {  
+        "showAdAttribution": true,  
+        "containsAutoReply": false,
+        "renderLargerThumbnail": false,  
+        "title": botname,   
+        "mediaType": 1,   
+        "thumbnail": global.query,  
+        "mediaUrl": `https://wa.me/5048930-2792`,  
+        "sourceUrl": `https://wa.me/5048930-2792`  
+        }
+        }  
+        }, { quoted: null })
+			} else if (res.restrict == false) {
+				await sleep(2000)
+				try {
+        ppgroup = await skmod.profilePictureUrl(anu.id, 'image')
+        } catch (err) {
+        ppgroup = 'https://i.ibb.co/RBx5SQC/avatar-group-large-v2.png?q=60'
+        }
+		    let text = `*「 Grupos 」*\n\n*Se ha abierto la información del grupo para todos los participantes*\n*¡Ahora los participantes pueden editar la información del grupo!*`
+	    skmod.sendMessage(res.id, {   
+        text: text,  
+        contextInfo:{  
+        forwardingScore: 9999999,  
+        isForwarded: true,   
+        mentionedJid:[m.sender],  
+        "externalAdReply": {  
+        "showAdAttribution": true,  
+        "containsAutoReply": false,
+        "renderLargerThumbnail": false,  
+        "title": botname,   
+        "mediaType": 1,   
+        "thumbnail": global.query,  
+        "mediaUrl": `https://wa.me/5048930-2792`,  
+        "sourceUrl": `https://wa.me/5048930-2792`  
+        }
+        }  
+        }, { quoted: null })
+			} else if(!res.desc == ''){
+				await sleep(2000)
+				try {
+        ppgroup = await skmod.profilePictureUrl(anu.id, 'image')
+        } catch (err) {
+        ppgroup = 'https://i.ibb.co/RBx5SQC/avatar-group-large-v2.png?q=60'
+        }
+	    let text = `*「 Grupos 」*\n\n*La descripción del grupo se ha cambiado:*\n\n*nueva descripción: ${res.desc}*`
+	    skmod.sendMessage(res.id, {   
+        text: text,  
+        contextInfo:{  
+        forwardingScore: 9999999,  
+        isForwarded: true,   
+        mentionedJid:[m.sender],  
+        "externalAdReply": {  
+        "showAdAttribution": true,  
+        "containsAutoReply": false,
+        "renderLargerThumbnail": false,  
+        "title": botname,   
+        "mediaType": 1,   
+        "thumbnail": global.query,  
+        "mediaUrl": `https://wa.me/5048930-2792`,  
+        "sourceUrl": `https://wa.me/5048930-2792`  
+        }
+        }  
+        }, { quoted: null })
+      } else {
+				await sleep(2000)
+				try {
+        ppgroup = await skmod.profilePictureUrl(anu.id, 'image')
+        } catch (err) {
+        ppgroup = 'https://i.ibb.co/RBx5SQC/avatar-group-large-v2.png?q=60'
+        }
+				let text = `*「 Grupos 」*\n\n*El nombre del grupo ha sido cambiado:*\n\n*nuevo nombre: ${res.subject}*`
+        skmod.sendMessage(res.id, {   
+        text: text,  
+        contextInfo:{  
+        forwardingScore: 9999999,  
+        isForwarded: true,   
+        mentionedJid:[m.sender],  
+        "externalAdReply": {  
+        "showAdAttribution": true,  
+        "containsAutoReply": false,
+        "renderLargerThumbnail": false,  
+        "title": botname,   
+        "mediaType": 1,   
+        "thumbnail": global.query,  
+        "mediaUrl": `https://wa.me/5048930-2792`,  
+        "sourceUrl": `https://wa.me/5048930-2792`  
+        }
+        }  
+        }, { quoted: null })
+				}
+			
+		})
 
-function isBase64(text) {
-const validChars = /^[A-Za-z0-9+/]*={0,2}$/
-if (text.length % 4 === 0 && validChars.test(text)) {
-const decoded = Buffer.from(text, 'base64').toString('base64')
-return decoded === text
-}
-return false
-}
+    skmod.ev.on('group-participants.update', async (anu) => {
+    let isWelcome = global.db.data.chats[anu.id].welcome
+    if(!isWelcome) return
+    console.log(anu)
+    try {
+    let metadata = await skmod.groupMetadata(anu.id)
+    let participants = anu.participants
+    for (let num of participants) {
+    // Get Profile Picture User
+    try {
+    ppuser = await skmod.profilePictureUrl(num, 'image')
+    } catch {
+    ppuser = 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png?q=60'
+    }
 
-function fileExists(filePath) {
-try {
-return fs.statSync(filePath).isFile()
-} catch (err) {
-return false
-}}
+    // Get Profile Picture Group
+    try {
+    ppgroup = await skmod.profilePictureUrl(anu.id, 'image')
+    } catch {
+    ppgroup = 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png?q=60'
+    }
+
+    if (anu.action == 'add') {
+    skmod.sendMessage(anu.id, { image: { url: ppuser }, mentions: [num], caption: `
+*「 Grupos 」*
+
+*Hola @${num.split("@")[0]} bienvenido a ${metadata.subject}*
+
+*「 Reglas y desc 」*
+
+${metadata.desc}
+`})
+    } else if (anu.action == 'remove') {
+    skmod.sendMessage(anu.id, { image: { url: ppuser }, mentions: [num], caption: `
+*「 Grupos 」*
+
+*se nos fue @${num.split("@")[0]}*
+*adios 👋*
+`})
+    } else if (anu.action == 'promote') {
+    skmod.sendMessage(anu.id, { image: { url: ppuser }, mentions: [num], caption: `*「 Grupos 」*\n\n*@${num.split('@')[0]} 𝙴𝙽𝚃𝚁𝙰 𝙰𝙻 𝙶𝚁𝚄𝙿𝙾 𝙳𝙴 𝙰𝙳𝙼𝙸𝙽𝚂 𝙳𝙴 ${metadata.subject} 🎉🎉*`})
+    } else if (anu.action == 'demote') {
+    skmod.sendMessage(anu.id, { image: { url: ppuser }, mentions: [num], caption: `*「 Grupos 」*\n\n*@${num.split('@')[0]} 𝙰𝙱𝙰𝙽𝙳𝙾𝙽𝙰 𝙴𝙻 𝙶𝚁𝚄𝙿𝙾 𝙳𝙴 𝙰𝙳𝙼𝙸𝙽𝚂 𝙳𝙴 ${metadata.subject} 😑*`})
+    }
+    }
+    } catch (err) {
+    console.log(err)
+    }
+    })
+   conn.ev.on('creds.update', saveCreds)   
+   store.bind(conn.ev);   
+   }
+   
+   skBot()
+   } catch (e) {
+   m.reply(util.format(e))
+   }
+   }
+   
+   module.exports = { jadibot2 }
+   
+    let file = require.resolve(__filename)   
+    fs.watchFile(file, () => {   
+    fs.unwatchFile(file)   
+    console.log(chalk.redBright(`Update ${__filename}`))   
+    delete require.cache[file]   
+    require(file)   
+    })
