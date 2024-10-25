@@ -1218,7 +1218,7 @@ if (user.antispam2 && isROwner) return
 let time = global.db.data.users[m.sender].spam + 1000
 if (new Date - global.db.data.users[m.sender].spam < 1000) return console.log(`[ SPAM ]`) 
 global.db.data.users[m.sender].spam = new Date * 1
-/}
+}
 		
 let hl = _prefix 
 let adminMode = global.db.data.chats[m.chat].modoadmin
