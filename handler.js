@@ -1067,7 +1067,7 @@ restrict: false,
 temporal: false,
 antiPrivate: true,
 antiCall: true,
-antiSpam: true,
+antiSpam: false,
 modoia: false, 
 jadibotmd: true,
 }} catch (e) {
