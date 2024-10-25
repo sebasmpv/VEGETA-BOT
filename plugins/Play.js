@@ -55,7 +55,7 @@ let menu = ''
 await conn.sendListB(m.chat, menu, txt, `Clik`, yt_play[0].thumbnail, listSections, m)
 await m.react(done)
 } catch {
-await conn.reply(m.chat, `✘ *Ocurrío un error*`, m, rcanal)
+await conn.reply(m.chat, `✘ *Ocurrío un error*`, m)
 }}
 handler.help = ['play', 'play2'];
 handler.tags = ['descargas'];
