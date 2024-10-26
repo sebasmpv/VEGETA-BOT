@@ -7,6 +7,7 @@ let handler = m => m
 handler.before = async function (m, { conn, participants, groupMetadata}) {
 
 if (!m.messageStubType || !m.isGroup) return
+const groupName = (await conn.groupMetadata(m.chat)).subject;
 let usuario = `@${m.sender.split`@`[0]}`
 let chat = global.db.data.chats[m.chat]
 let users = participants.map(u => conn.decodeJid(u.id))
