@@ -32,7 +32,7 @@ else global.conns = []
 
 let handler = async (m, { conn, args, usedPrefix, command, isOwner }) => {
 let parentw = conn
-if (conn.user.jid !== global.conn.user.jid) return parentw.reply(m.chat, `𝗖𝗢𝗡𝗘𝗖𝗧𝗔𝗗𝗢 ✅`, fkontak)
+if (conn.user.jid !== global.conn.user.jid) return parentw.reply(m.chat, `🔵 *Yo soy subbot para hacerte subbot* *Ingresa al siguiente link!*: Wa.me/${global.conn.user.jid.split`@`[0]}&text=${usedPrefix + command}\n`, fkontak)
 const mcode = args[0] && args[0].includes('--code') ? true : args[1] && args[1].includes('--code') ? true : false
 
 
@@ -43,9 +43,9 @@ args[0] = args[0].replace('--code', '').trim()
 if (args[1]) args[1] = args[1].replace('--code', '').trim()
 if (args[0] == '') args[0] = undefined
 console.log(args[0])}
-if (!fs.existsSync('./GataJadiBot/'+ id)){
-fs.mkdirSync('./GataJadiBot/'+ id, { recursive: true })}
-args[0] && args[0] != undefined ? fs.writeFileSync('./GataJadiBot/' + id + '/creds.json', JSON.stringify(JSON.parse(Buffer.from(args[0], 'base64').toString('utf-8')), null, '\t')) : ''
+if (!fs.existsSync('./IgnaJadiBot/'+ id)){
+fs.mkdirSync('./IgnaJadiBot/'+ id, { recursive: true })}
+args[0] && args[0] != undefined ? fs.writeFileSync('./IgnaJadiBot/' + id + '/creds.json', JSON.stringify(JSON.parse(Buffer.from(args[0], 'base64').toString('utf-8')), null, '\t')) : ''
 
 if (fs.existsSync('./IgnaJadiBot/' + id + '/creds.json')) {
 let creds = JSON.parse(fs.readFileSync("./IgnaJadiBot/" + id + "/creds.json"))
@@ -60,10 +60,10 @@ const drmer = Buffer.from(drm1 + drm2, `base64`)
 async function jddt() {
 let who = m.mentionedJid && m.mentionedJid[0] ? m.mentionedJid[0] : m.fromMe ? parentw.user.jid : m.sender
 let id = `${who.split`@`[0]}`
-if (!fs.existsSync('./GataJadiBot/'+ id)){
-fs.mkdirSync('./GataJadiBot/'+ id, { recursive: true })
+if (!fs.existsSync('./IgnaJadiBot/'+ id)){
+fs.mkdirSync('./IgnaJadiBot/'+ id, { recursive: true })
 }
-args[0] ? fs.writeFileSync('./GataJadiBot/' + id + '/creds.json', JSON.stringify(JSON.parse(Buffer.from(args[0], 'base64').toString('utf-8')), null, `\t`)) : ''
+args[0] ? fs.writeFileSync('./IgnaJadiBot/' + id + '/creds.json', JSON.stringify(JSON.parse(Buffer.from(args[0], 'base64').toString('utf-8')), null, `\t`)) : ''
 
 let { version, isLatest } = await fetchLatestBaileysVersion()
 const msgRetry = (MessageRetryMap) => { }
@@ -79,7 +79,7 @@ msgRetryCache,
 version,
 syncFullHistory: true,
 //browser: Browsers.ubuntu('Chrome')
-browser: mcode ? ['Ubuntu', 'Edge', '20.0.4'] : ['𝙋𝙧𝙤𝙮𝙚𝙘𝙩𝙤𝙓 // 𝙀𝘽𝙂', 'Edge', '2.0.0'],
+browser: mcode ? ['Ubuntu', 'Edge', '20.0.4'] : ['IgnaBot-MD', 'Edge', '2.0.0'],
 defaultQueryTimeoutMs: undefined,
 getMessage: async (key) => {
 if (store) {
@@ -121,7 +121,7 @@ const reason = lastDisconnect?.error?.output?.statusCode || lastDisconnect?.erro
 if (connection === 'close') {
 console.log(reason)
 if (reason == 405) {
-await fs.unlinkSync('./GataJadiBot/' + id + '/creds.json')
+await fs.unlinkSync('./IgnaJadiBot/' + id + '/creds.json')
 
 return await conn.reply(m.chat, '✨️ 𝙲𝚎𝚛𝚛𝚊𝚗𝚍𝚘 :𝚌', m)
 }
@@ -149,9 +149,8 @@ if (global.db.data == null) loadDatabase()
 if (connection == `open`) {
 conn.isInit = true
 global.conns.push(conn)
-await parentw.sendMessage(m.chat, {text : args[0] ?  `𝗘𝗦𝗣𝗘𝗥𝗘` : `Dispositivo vinculado ✅ 
-Gracias por ser parte de proyectoX & EBG.`}, { quoted: m })
-await parentw.sendMessage(m.chat, {text : `𝗖𝗢𝗡𝗘𝗖𝗧𝗔𝗡𝗗𝗢 ...`}, { quoted: m })
+await parentw.sendMessage(m.chat, {text : args[0] ? `⚪️ Conectado` : `🔵 𝙻𝚊 𝚜𝚞𝚋-𝚋𝚘𝚝 𝚎𝚜𝚝𝚊 𝚊𝚌𝚝𝚒𝚟𝚊, 𝚞𝚜𝚎 𝚜𝚞 (𝙸𝙳) 𝚙𝚊𝚛𝚊 𝚊𝚌𝚝𝚒𝚟𝚊𝚛 𝚗𝚞𝚎𝚟𝚊𝚖𝚎𝚗𝚝𝚎 𝚕𝚊 𝚜𝚞𝚋-𝚋𝚘𝚝`}, { quoted: m })
+await parentw.sendMessage(m.chat, {text : `😝 conectado espere un momento...`}, { quoted: m })
 await sleep(5000)
 if (!args[0]) parentw.sendMessage(m.chat, {text : usedPrefix + command + ' ' + Buffer.from(fs.readFileSync('./IgnaJadiBot/' + id + '/creds.json'), 'utf-8').toString('base64')}, { quoted: m })    
 
