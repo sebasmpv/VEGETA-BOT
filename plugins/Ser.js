@@ -45,7 +45,7 @@ if (args[0] == '') args[0] = undefined
 console.log(args[0])}
 if (!fs.existsSync('./IgnaJadiBot/'+ id)){
 fs.mkdirSync('./IgnaJadiBot/'+ id, { recursive: true })}
-args[0] && args[0] != undefined ? fs.writeFileSync('./IgnaJadiBot/' + id + '/creds.json', JSON.stringify(JSON.parse(Buffer.from(args[0], 'base64').toString('utf-8')), null, '\t')) : ''
+args[0] && args[0] != undefined ? fs.writeFileSync('./GataJadiBot/' + id + '/creds.json', JSON.stringify(JSON.parse(Buffer.from(args[0], 'base64').toString('utf-8')), null, '\t')) : ''
 
 if (fs.existsSync('./IgnaJadiBot/' + id + '/creds.json')) {
 let creds = JSON.parse(fs.readFileSync("./IgnaJadiBot/" + id + "/creds.json"))
@@ -63,7 +63,7 @@ let id = `${who.split`@`[0]}`
 if (!fs.existsSync('./IgnaJadiBot/'+ id)){
 fs.mkdirSync('./IgnaJadiBot/'+ id, { recursive: true })
 }
-args[0] ? fs.writeFileSync('./IgnaJadiBot/' + id + '/creds.json', JSON.stringify(JSON.parse(Buffer.from(args[0], 'base64').toString('utf-8')), null, `\t`)) : ''
+args[0] ? fs.writeFileSync('./GataJadiBot/' + id + '/creds.json', JSON.stringify(JSON.parse(Buffer.from(args[0], 'base64').toString('utf-8')), null, `\t`)) : ''
 
 let { version, isLatest } = await fetchLatestBaileysVersion()
 const msgRetry = (MessageRetryMap) => { }
