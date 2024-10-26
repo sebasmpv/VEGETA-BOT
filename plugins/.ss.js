@@ -41,7 +41,7 @@ else return conn.reply(m.chat, `*Y LA IMAGEN? 🤔 RESPONDE A UNA IMAGEN, VIDEO,
 handler.help = ['sticker']
 handler.tags = ['sticker']
 handler.command = ['s', 'sticker'] 
-handler.register = true
+
 export default handler
 
 const isUrl = (text) => {
