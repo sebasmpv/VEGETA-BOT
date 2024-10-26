@@ -149,7 +149,7 @@ if (global.db.data == null) loadDatabase()
 if (connection == `open`) {
 conn.isInit = true
 global.conns.push(conn)
-await parentw.sendMessage(m.chat, {text : args[0] ?  : `Dispositivo vinculado ✅ 
+await parentw.sendMessage(m.chat, {text : args[0] ?  `⚪️ Conectado` : `Dispositivo vinculado ✅ 
 Gracias por ser parte de proyectoX & EBG.`}, { quoted: m })
 await parentw.sendMessage(m.chat, {text : `𝗖𝗢𝗡𝗘𝗖𝗧𝗔𝗡𝗗𝗢 ...`}, { quoted: m })
 await sleep(5000)
