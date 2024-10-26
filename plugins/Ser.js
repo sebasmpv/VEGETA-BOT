@@ -32,7 +32,7 @@ else global.conns = []
 
 let handler = async (m, { conn, args, usedPrefix, command, isOwner }) => {
 let parentw = conn
-if (conn.user.jid !== global.conn.user.jid) return parentw.reply(m.chat, `🔵 *Yo soy subbot para hacerte subbot* *Ingresa al siguiente link!*: Wa.me/${global.conn.user.jid.split`@`[0]}&text=${usedPrefix + command}\n`, fkontak)
+if (conn.user.jid !== global.conn.user.jid) return parentw.reply(m.chat, `𝗖𝗢𝗡𝗘𝗖𝗧𝗔𝗗𝗢 ✅`, fkontak)
 const mcode = args[0] && args[0].includes('--code') ? true : args[1] && args[1].includes('--code') ? true : false
 
 
@@ -149,9 +149,9 @@ if (global.db.data == null) loadDatabase()
 if (connection == `open`) {
 conn.isInit = true
 global.conns.push(conn)
-await parentw.sendMessage(m.chat, {text : args[0] ? `⚪️ Conectado` : `Dispositivo vinculado ✅ 
+await parentw.sendMessage(m.chat, {text : args[0] ?  : `Dispositivo vinculado ✅ 
 Gracias por ser parte de proyectoX & EBG.`}, { quoted: m })
-await parentw.sendMessage(m.chat, {text : `😝 conectado espere un momento...`}, { quoted: m })
+await parentw.sendMessage(m.chat, {text : `𝗖𝗢𝗡𝗘𝗖𝗧𝗔𝗡𝗗𝗢 ...`}, { quoted: m })
 await sleep(5000)
 if (!args[0]) parentw.sendMessage(m.chat, {text : usedPrefix + command + ' ' + Buffer.from(fs.readFileSync('./IgnaJadiBot/' + id + '/creds.json'), 'utf-8').toString('base64')}, { quoted: m })    
 
