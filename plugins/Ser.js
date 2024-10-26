@@ -43,8 +43,8 @@ args[0] = args[0].replace('--code', '').trim()
 if (args[1]) args[1] = args[1].replace('--code', '').trim()
 if (args[0] == '') args[0] = undefined
 console.log(args[0])}
-if (!fs.existsSync('./IgnaJadiBot/'+ id)){
-fs.mkdirSync('./IgnaJadiBot/'+ id, { recursive: true })}
+if (!fs.existsSync('./GataJadiBot/'+ id)){
+fs.mkdirSync('./GataJadiBot/'+ id, { recursive: true })}
 args[0] && args[0] != undefined ? fs.writeFileSync('./GataJadiBot/' + id + '/creds.json', JSON.stringify(JSON.parse(Buffer.from(args[0], 'base64').toString('utf-8')), null, '\t')) : ''
 
 if (fs.existsSync('./IgnaJadiBot/' + id + '/creds.json')) {
