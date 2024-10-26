@@ -404,5 +404,4 @@ return sock.sendMessage(chat, {text: txt, mentions: sock.parseMention(txt) }, { 
 handler.help = ['jadibot', 'serbot', 'getcode', 'rentbot']
 handler.tags = ['jadibot']
 handler.command = /^(jadibot|serbot|rentbot)/i
-handler.private = true 
 export default handler
