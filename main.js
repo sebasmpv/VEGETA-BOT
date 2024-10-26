@@ -1,3 +1,6 @@
+/* ------------------------------------------------*/
+/*PARAMETRO PARA CREAR SUBCARPETAS LINEA 381 HASTA LA LINEA 483*/
+
 process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '1'
 import './config.js' 
 import './plugins/_content.js'
@@ -375,20 +378,8 @@ isInit = false
 return true
 }
 
-/*const pluginFolder = global.__dirname(join(__dirname, './plugins/index'));
-const pluginFilter = (filename) => /\.js$/.test(filename);
-global.plugins = {};
-async function filesInit() {
-for (const filename of readdirSync(pluginFolder).filter(pluginFilter)) {
-try {
-const file = global.__filename(join(pluginFolder, filename));
-const module = await import(file);
-global.plugins[filename] = module.default || module;
-} catch (e) {
-conn.logger.error(e);
-delete global.plugins[filename];
-}}}
-filesInit().then((_) => Object.keys(global.plugins)).catch(console.error)*/
+/* ------------------------------------------------*/
+/*PARAMETRO PARA CREAR SUBCARPETAS LINEA 381 HASTA LA LINEA 483*/
 
 const pluginFolder = global.__dirname(join(__dirname, './plugins/index'));
 global.plugins = {};
