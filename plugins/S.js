@@ -42,7 +42,7 @@ if (!stiker) stiker = e
 } finally {
 if (stiker) conn.sendFile(m.chat, stiker, 'sticker.webp', '',m, true, { contextInfo: { 'forwardingScore': 200, 'isForwarded': false, externalAdReply:{ showAdAttribution: false, title: `Yaemori Bot - MD 🚩`, body: `✡︎ Sticker By • YaemoriBot`, mediaType: 2, sourceUrl: redes, thumbnail: icons}}}, { quoted: m })
 
-else return conn.reply(m.chat, '🍿 responde a un video o imagen', m, rcanal)
+else return conn.reply(m.chat, '🍿 responde a un video o imagen', m)
 
 
 }}
