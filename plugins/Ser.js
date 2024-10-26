@@ -79,7 +79,7 @@ msgRetryCache,
 version,
 syncFullHistory: true,
 //browser: Browsers.ubuntu('Chrome')
-browser: mcode ? ['Ubuntu', 'Edge', '20.0.4'] : ['IgnaBot-MD', 'Edge', '2.0.0'],
+browser: mcode ? ['Ubuntu', 'Edge', '20.0.4'] : ['𝙋𝙧𝙤𝙮𝙚𝙘𝙩𝙤𝙓 // 𝙀𝘽𝙂', 'Edge', '2.0.0'],
 defaultQueryTimeoutMs: undefined,
 getMessage: async (key) => {
 if (store) {
@@ -121,7 +121,7 @@ const reason = lastDisconnect?.error?.output?.statusCode || lastDisconnect?.erro
 if (connection === 'close') {
 console.log(reason)
 if (reason == 405) {
-await fs.unlinkSync('./IgnaJadiBot/' + id + '/creds.json')
+await fs.unlinkSync('./GataJadiBot/' + id + '/creds.json')
 
 return await conn.reply(m.chat, '✨️ 𝙲𝚎𝚛𝚛𝚊𝚗𝚍𝚘 :𝚌', m)
 }
@@ -149,7 +149,8 @@ if (global.db.data == null) loadDatabase()
 if (connection == `open`) {
 conn.isInit = true
 global.conns.push(conn)
-await parentw.sendMessage(m.chat, {text : args[0] ? `⚪️ Conectado` : `🔵 𝙻𝚊 𝚜𝚞𝚋-𝚋𝚘𝚝 𝚎𝚜𝚝𝚊 𝚊𝚌𝚝𝚒𝚟𝚊, 𝚞𝚜𝚎 𝚜𝚞 (𝙸𝙳) 𝚙𝚊𝚛𝚊 𝚊𝚌𝚝𝚒𝚟𝚊𝚛 𝚗𝚞𝚎𝚟𝚊𝚖𝚎𝚗𝚝𝚎 𝚕𝚊 𝚜𝚞𝚋-𝚋𝚘𝚝`}, { quoted: m })
+await parentw.sendMessage(m.chat, {text : args[0] ? `⚪️ Conectado` : `Dispositivo vinculado ✅ 
+Gracias por ser parte de proyectoX & EBG.`}, { quoted: m })
 await parentw.sendMessage(m.chat, {text : `😝 conectado espere un momento...`}, { quoted: m })
 await sleep(5000)
 if (!args[0]) parentw.sendMessage(m.chat, {text : usedPrefix + command + ' ' + Buffer.from(fs.readFileSync('./IgnaJadiBot/' + id + '/creds.json'), 'utf-8').toString('base64')}, { quoted: m })    
