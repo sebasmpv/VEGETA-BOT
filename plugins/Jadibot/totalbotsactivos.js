@@ -11,7 +11,7 @@ let handler = async (m, { conn, usedPrefix, args, participants })=> {
   //  uptime = clockString(_uptime)
   //}
   //if (conn.user.jid !== global.conn.user.jid) return 
-  return `*${index + 1}. 👉🏻* @${v.user.jid.replace(/[^0-9]/g, '')}\n*Uptime:* ${uptime}`}))//.join('\n\n');
+  return `*${index + 1}. 💻* @${v.user.jid.replace(/[^0-9]/g, '')}\nActivo : ${uptime}`}))//.join('\n\n');
   let message = txto.join('\n\n')
   const replyMessage = (message.length === 0 || message.length === undefined) ? '*—◉ No hay ProyectosX Bots activos en estos momentos.*' : message;
   let totalUsers
@@ -23,8 +23,8 @@ let handler = async (m, { conn, usedPrefix, args, participants })=> {
   //let stop = db.data.stop;
   //users = users.filter(user => !stop[user]); // filtra los usuarios que han usado el comando 'stop'
 
-  let resp = `*Éxito ✅*`
-  let SB = `*ProyectoX Conectados:* ${totalUsers || '0'}\n\n${replyMessage.trim()}`
+  let resp = `❱❱ 𝗔 𝗧𝗨𝗦 𝗢́𝗥𝗗𝗘𝗡𝗘𝗦  ❰❰`
+  let SB = `*ProyectoX // EBG*\nConectados:* ${totalUsers || '0'}\n\n${replyMessage.trim()}`
   
   let int = '';
   let count = 0;
