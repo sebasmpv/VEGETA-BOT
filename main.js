@@ -24,7 +24,7 @@ import { mongoDB, mongoDBV2 } from './lib/mongoDB.js'
 import store from './lib/store.js'
 import readline from 'readline'
 import NodeCache from 'node-cache'
-import { PhoneNumberUtil } from 'google-libphonenumber'
+import pkg from 'google-libphonenumber'
 const { PhoneNumberUtil } = pkg
 const phoneUtil = PhoneNumberUtil.getInstance()
 const { makeInMemoryStore, DisconnectReason, useMultiFileAuthState, MessageRetryMap, fetchLatestBaileysVersion, makeCacheableSignalKeyStore } = await import('@whiskeysockets/baileys')
@@ -185,7 +185,7 @@ const connectionOptions = {
 logger: pino({ level: 'silent' }),
 printQRInTerminal: opcion == '1' ? true : methodCodeQR ? true : false,
 mobile: MethodMobile, 
-browser: opcion == '1' ? ['𝙀𝙇𝙄𝙏𝙀 𝘽𝙊𝙏 𝙂𝙇𝙊𝘽𝘼𝙇', 'Edge', '20.0.04'] : methodCodeQR ? ['𝙀𝙇𝙄𝙏𝙀 𝘽𝙊𝙏 𝙂𝙇𝙊𝘽𝘼𝙇', 'Edge', '20.0.04'] : ["Ubuntu", "Chrome", "20.0.04"],
+browser: opcion == '1' ? ['GataBot-MD', 'Edge', '20.0.04'] : methodCodeQR ? ['GataBot-MD', 'Edge', '20.0.04'] : ["Ubuntu", "Chrome", "20.0.04"],
 auth: {
 creds: state.creds,
 keys: makeCacheableSignalKeyStore(state.keys, Pino({ level: "fatal" }).child({ level: "fatal" })),
@@ -285,6 +285,45 @@ console.log(chalk.bold.redBright(lenguajeGB['smsConexiondescon'](reason, connect
 }}
 }
 process.on('uncaughtException', console.error);
+//process.on('uncaughtException', (err) => {
+//console.error('Se ha cerrado la conexión:\n', err)
+//process.send('reset') })
+
+/* ------------------------------------------------*/
+/* Código reconexión de sub-bots fases beta */
+/* Echo por: https://github.com/elrebelde21 */
+
+/*async function connectSubBots() {
+const subBotDirectory = './GataJadiBot';
+if (!existsSync(subBotDirectory)) {
+console.log('No se encontraron ningun sub-bots.');
+return;
+}
+const subBotFolders = readdirSync(subBotDirectory).filter(file => 
+statSync(join(subBotDirectory, file)).isDirectory()
+);
+const botPromises = subBotFolders.map(async folder => {
+const authFile = join(subBotDirectory, folder);
+if (existsSync(join(authFile, 'creds.json'))) {
+return await connectionUpdate(authFile);
+}
+});
+const bots = await Promise.all(botPromises);
+global.conns = bots.filter(Boolean);
+console.log(chalk.bold.greenBright(`✅ TODOS LOS SUB-BOTS SE HAN INICIADO CORRECTAMENTE`))
+}
+(async () => {
+global.conns = [];
+const mainBotAuthFile = 'GataBotSession';
+try {
+const mainBot = await connectionUpdate(mainBotAuthFile);
+global.conns.push(mainBot);
+console.log(chalk.bold.greenBright(`✅ BOT PRINCIPAL INICIANDO CORRECTAMENTE`))
+await connectSubBots();
+} catch (error) {
+console.error(chalk.bold.cyanBright(`❌ OCURRIÓ UN ERROR AL INICIAR EL BOT PRINCIPAL: `, error))
+}
+})();*/
 
 /* ------------------------------------------------*/
 
@@ -342,9 +381,22 @@ isInit = false
 return true
 }
 
-/* ------------------------------------------------*/
-/*PARAMETRO PARA CREAR SUBCARPETAS LINEA 381 HASTA LA LINEA 483*/
+/*const pluginFolder = global.__dirname(join(__dirname, './plugins/index'));
+const pluginFilter = (filename) => /\.js$/.test(filename);
+global.plugins = {};
+async function filesInit() {
+for (const filename of readdirSync(pluginFolder).filter(pluginFilter)) {
+try {
+const file = global.__filename(join(pluginFolder, filename));
+const module = await import(file);
+global.plugins[filename] = module.default || module;
+} catch (e) {
+conn.logger.error(e);
+delete global.plugins[filename];
+}}}
+filesInit().then((_) => Object.keys(global.plugins)).catch(console.error)*/
 
+// subcarpetas plugin 
 const pluginFolder = global.__dirname(join(__dirname, './plugins/index'));
 global.plugins = {};
 
@@ -397,8 +449,8 @@ global.reload = async (_ev, filename) => {
       }
     }
   }
-};
-
+}; 
+// subcarpetas plugins 
 
 Object.freeze(global.reload);
 watch(pluginFolder, global.reload);
@@ -469,7 +521,7 @@ console.log(chalk.bold.red(lenguajeGB.smspurgeSessionSB3() + err))
 }}
 function purgeOldFiles() {
 const directories = ['./GataBotSession/', './GataJadiBot/']
-  directories.forEach(dir => {
+directories.forEach(dir => {
 readdirSync(dir, (err, files) => {
 if (err) throw err
 files.forEach(file => {
@@ -495,7 +547,13 @@ setInterval(async () => {
 if (stopped === 'close' || !conn || !conn.user) return
 await clearTmp()
 console.log(chalk.bold.cyanBright(lenguajeGB.smsClearTmp()))}, 1000 * 60 * 4) // 4 min 
-
+//setInterval(async () => {
+//if (stopped === 'close' || !conn || !conn.user) return
+//await purgeSession()
+//console.log(chalk.bold.cyanBright(lenguajeGB.smspurgeSession()))}, 1000 * 60 * 10) // 10 min
+//setInterval(async () => {
+//if (stopped === 'close' || !conn || !conn.user) return
+//await purgeSessionSB()}, 1000 * 60 * 10) 
 setInterval(async () => {
 if (stopped === 'close' || !conn || !conn.user) return
 await purgeOldFiles()
@@ -509,6 +567,7 @@ unwatchFile(file)
 console.log(chalk.bold.greenBright(lenguajeGB['smsMainBot']().trim()))
 import(`${file}?update=${Date.now()}`)
 })
+
 async function isValidPhoneNumber(number) {
 try {
 number = number.replace(/\s+/g, '')
@@ -517,7 +576,7 @@ if (number.startsWith('+521')) {
 number = number.replace('+521', '+52'); // Cambiar +521 a +52
 } else if (number.startsWith('+52') && number[4] === '1') {
 number = number.replace('+52 1', '+52'); // Cambiar +52 1 a +52
-} 
+}
 const parsedNumber = phoneUtil.parseAndKeepRawInput(number)
 return phoneUtil.isValidNumber(parsedNumber)
 } catch (error) {
