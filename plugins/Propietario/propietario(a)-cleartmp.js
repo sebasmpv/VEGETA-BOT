@@ -3,7 +3,7 @@ import path, { join } from 'path'
 import {
 readdirSync,
 statSync,
-unlinkSync,
+//unlinkSync,
 existsSync,
 readFileSync,
 watch
@@ -21,7 +21,7 @@ const filename = []
 tmp.forEach(dirname => readdirSync(dirname).forEach(file => filename.push(join(dirname, file))))
 return filename.map(file => {
 const stats = statSync(file)
-unlinkSync(file)
+//unlinkSync(file)
 })} //NO USAR ESTE COMANDO EN HEROKU | DO NOT USE THIS COMMAND ON HEROKU
 handler.help = ['cleartmp']
 handler.tags = ['owner']
