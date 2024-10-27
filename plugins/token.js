@@ -9,9 +9,8 @@ async function handler(m, {usedPrefix}) {
         await m.reply(`🍭 No tienes un Token activo.`)
     }
   }
-  handler.command = ['token']
+  handler.command = ['tokenn']
   handler.help = ['token']
   handler.tags = ['jadibot']
-  handler.registrado = false
-  handler.private = false
+  
   export default handler
