@@ -20,3 +20,4 @@ handler.command = /^(deletebot|eliminarsesion|deletesesion)$/i
 handler.private = false
 handler.fail = null
 export default handler
+//
