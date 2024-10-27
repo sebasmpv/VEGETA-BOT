@@ -55,7 +55,7 @@ console.error(userS + ' ' + lenguajeGB.smsJBErr(), err)
 }
 
 handler.command = /^(deletesess?ion|eliminarsesion|borrarsesion|delsess?ion|cerrarsesion)$/i
-handler.private = false
+
 handler.fail = null
 
 export default handler
