@@ -13,7 +13,7 @@ let handler = async (m, { conn, usedPrefix, args, participants })=> {
   //if (conn.user.jid !== global.conn.user.jid) return 
   return `*${index + 1}. 💻* @${v.user.jid.replace(/[^0-9]/g, '')}\nActivo : ${uptime}`}))//.join('\n\n');
   let message = txto.join('\n\n')
-  const replyMessage = (message.length === 0 || message.length === undefined) ? '*—◉ No hay ProyectosX Bots activos en estos momentos.*' : message;
+  const replyMessage = (message.length === 0 || message.length === undefined) ? '' : message;
   let totalUsers
   if (global.conns === undefined) {
     totalUsers = '0'
