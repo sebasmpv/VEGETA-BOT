@@ -25,6 +25,6 @@ m.reply(wait)
 };
 handler.help = ['speedtest'];
 handler.tags = ['info'];
-handler.command = /^(speedtest?|ping|test?speed)$/i;
+handler.command = /^(speedtest?|test?speed)$/i;
 handler.register = false
 export default handler;
