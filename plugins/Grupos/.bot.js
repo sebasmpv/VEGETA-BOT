@@ -1,12 +1,14 @@
 import translate from '@vitalets/google-translate-api';
 import fetch from 'node-fetch';
 const handler = async (m, {text, command, args, usedPrefix}) => {
-if (!text) throw `𝙀𝙎𝘾𝙍𝙄𝘽𝘼 𝙐𝙉 𝙏𝙀𝙓𝙏𝙊 𝙋𝘼𝙍𝘼 𝙃𝘼𝘽𝙇𝘼𝙍 𝘾𝙊𝙉𝙈𝙄𝙂𝙊\n\n𝙀𝙅𝙀𝙈𝙋𝙇𝙊\n*${usedPrefix + command} Hola Élite Bot*`
+if (!text) throw `𝘏𝘰𝘭𝘢 𝘏𝘶𝘮𝘢𝘯𝘰 😎 
+𝘔𝘪 𝘯𝘰𝘮𝘣𝘳𝘦 𝘦𝘴 𝘌𝘭𝘪𝘵𝘦 𝘉𝘰𝘵 , 𝘱𝘢𝘳𝘢 𝘪𝘯𝘵𝘦𝘳𝘢𝘤𝘵𝘶𝘢𝘳 𝘤𝘰𝘯𝘮𝘪𝘨𝘰 𝘦𝘴𝘤𝘳𝘪𝘣𝘪𝘳: 
+.𝘣𝘰𝘵 𝘏𝘰𝘭𝘢 𝘦𝘭𝘪𝘵𝘦 𝘣𝘰𝘵`
 try {
 await conn.sendPresenceUpdate('composing', m.chat)
-const api = await fetch('https://api.simsimi.net/v2/?text=' + text + '&lc=es');
-const resSimi = await api.json();
-m.reply(resSimi.success);
+let api = await fetch(`${apis}/tools/simi?text=${text}`)
+let resSimi = await api.json()
+await m.reply(resSimi.data.message)
 } catch {
 try {
 if (text.includes('Hola')) text = text.replace('Hola', 'Hello');
