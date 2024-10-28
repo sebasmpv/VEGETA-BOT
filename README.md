@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-<img src="https://telegra.ph/file/0541d4ac7ecf51a1faca9.jpg" alt="GataBot-MD" width="900"/>
+<img src="https://qu.ax/gHDEa.jpg" alt="GataBot-MD" width="900"/>
 </p>
 </div>
 
