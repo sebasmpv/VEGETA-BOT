@@ -1,154 +1,40 @@
-import fg from 'api-dylux'
-import yts from 'yt-search'
-import fetch from 'node-fetch' 
+import { createHash } from 'crypto'
 
-let handler = async (m, { conn, args, usedPrefix, text, command }) => {
-    if (!text) return conn.reply(m.chat, `*🚩 Ingresa un título o enlace de un video o música de YouTube.*`, m)
+let Reg = /\|?(.*)([.|] *?)([0-9]*)$/i
+let handler = async function (m, { conn, text, usedPrefix, command }) {
+let user = global.db.data.users[m.sender]
+let name2 = conn.getName(m.sender)
+let who = m.mentionedJid && m.mentionedJid[0] ? m.mentionedJid[0] : m.fromMe ? this.user.jid : m.sender
+let pp = await this.profilePictureUrl(who, 'image').catch(_ => 'https://telegra.ph/file/1861aab98389b13db8588.jpg')
+if (user.registered === true) throw `*⚠️ Ya estás registrado*\n\n¿Quiere volver a registrarse?\n\n💬 Use este comando para *eliminar su registro*\n*${usedPrefix}unreg* <Número de serie>`
+if (!Reg.test(text)) throw `*⚠️ Formato incorrecto*\n\n📝 Uso del comamdo: *${usedPrefix + command} nombre.edad*\n💡 Ejemplo : *${usedPrefix + command}* ${name2}.18`
+let [_, name, splitter, age] = text.match(Reg)
+if (!name) throw '*📝 El nombre no puede estar vacío*'
+if (!age) throw '*📝 La edad no puede estar vacía*'
+if (name.length >= 30) throw '*⚠️ El nombre es demasiado largo*' 
+age = parseInt(age)
+if (age > 100) throw '*👴🏻 Wow el abuelo quiere jugar al bot*'
+if (age < 5) throw '*👀 hay un bebé jsjsj*'
+user.name = name.trim()
+user.age = age
+user.regTime = + new Date
+user.registered = true
+let sn = createHash('md5').update(m.sender).digest('hex').slice(0, 6)	
+m.react('📩') 
+let regbot =`🗃️ *R E G I S T R A D O* 🗃️\n
+💌 *Nombre:* ${name}
+📆 *Edad* : ${age} años\n
+🎁 *R E M C O N P E N S A* 🎁\n
+🍫 *Chocolates*: 10
+🍭 *Dulces*: 5
+🧃 *Jugo*: 1
+🍻 *Cerveza*: 3`
+await m.reply(regbot)
+// await conn.sendUrl(m.chat, regbot, m, { externalAdReply: { mediaType: 1, renderLargerThumbnail: true, thumbnail: pp, thumbnailUrl: pp, title: 'Registrado 📩', }})
 
-    try {
-        let vid;
-
-        // Verificar si el texto ingresado es un enlace de YouTube
-        if (text.match(/^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+$/gi)) {
-            await m.react('🕓')
-            let res = await yts({ videoId: text.split('v=')[1] || text.split('/')[3] }) // Obtén el video directamente
-            vid = res
-        } else {
-            await m.react('🕓')
-            let res = await yts(text)
-            vid = res.videos[0] // Obtén el primer video de la búsqueda
-        }
-
-        if (!vid) return conn.reply(m.chat, `*☓ No se encontraron resultados para tu búsqueda.*`, m)
-
-        if (command === "playy" || command === "play2") {
-            const infoTexto = `乂  Y O U T U B E   M U S I C\n
-            ✩ *Título ∙* ${vid.title}\n
-            ✩ *Duración ∙* ${vid.timestamp}\n
-            ✩ *Visitas ∙* ${vid.views}\n
-            ✩ *Autor ∙* ${vid.author.name}\n
-            ✩ *Publicado ∙* ${vid.ago}\n
-            ✩ *Url ∙* ${'https://youtu.be/' + vid.videoId}\n`.trim()
-
-            await conn.sendButton(m.chat, infoTexto, wm, vid.thumbnail, [
-                ['Audio 📀', `${usedPrefix}mp3 ${vid.url}`],
-                ['Video 🎥', `${usedPrefix}mp4 ${vid.url}`],
-                ['AudioDoc 📀', `${usedPrefix}mp3doc ${vid.url}`],
-                ['VideoDoc 🎥', `${usedPrefix}mp4doc ${vid.url}`]
-            ], null, [['Canal', `https://whatsapp.com/channel/0029VaAN15BJP21BYCJ3tH04`]], m)
-        } else {
-            let q = command.includes('mp4') ? '360p' : '128kbps'
-            let dl_url, size, title
-            
-            if (command === 'mp3' || command === 'mp3doc') {
-                let yt = await fg.yta(vid.url, q)
-                dl_url = yt.dl_url
-                size = yt.size.split('MB')[0]
-                title = yt.title
-            } else if (command === 'mp4' || command === 'mp4doc') {
-                let yt = await fg.ytv(vid.url, q)
-                dl_url = yt.dl_url
-                size = yt.size.split('MB')[0]
-                title = yt.title
-            }
-
-            const limit = 100
-            if (size >= limit) {
-                return conn.reply(m.chat, `El archivo pesa más de ${limit} MB, se canceló la descarga.`, m).then(_ => m.react('✖️'))
-            }
-
-            if (command === 'mp3') {
-                await conn.sendMessage(m.chat, { 
-                    audio: { url: dl_url }, 
-                    mimetype: "audio/mpeg", 
-                    fileName: `${title}.mp3`, 
-                    quoted: m, 
-                    contextInfo: {
-                        'forwardingScore': 200,
-                        'isForwarded': true,
-                        externalAdReply:{
-                            showAdAttribution: false,
-                            title: `${title}`,
-                            body: `${vid.author.name}`,
-                            mediaType: 2, 
-                            sourceUrl: `${vid.url}`,
-                            thumbnail: await (await fetch(vid.thumbnail)).buffer()
-                        }
-                    }
-                }, { quoted: m })
-            } else if (command === 'mp4') {
-                await conn.sendMessage(m.chat, { 
-                    video: { url: dl_url }, 
-                    caption: `${title}\n⇆ㅤㅤ◁ㅤㅤ❚❚ㅤㅤ▷ㅤㅤ↻\n00:15 ━━━━●────── ${vid.timestamp}`, 
-                    mimetype: 'video/mp4', 
-                    fileName: `${title}.mp4`, 
-                    quoted: m, 
-                    contextInfo: {
-                        'forwardingScore': 200,
-                        'isForwarded': true,
-                        externalAdReply:{
-                            showAdAttribution: false,
-                            title: `${title}`,
-                            body: `${vid.author.name}`,
-                            mediaType: 2, 
-                            sourceUrl: `${vid.url}`,
-                            thumbnail: await (await fetch(vid.thumbnail)).buffer()
-                        }
-                    }
-                }, { quoted: m })
-            } else if (command === 'mp3doc') {
-                await conn.sendMessage(m.chat, { 
-                    document: { url: dl_url }, 
-                    mimetype: "audio/mpeg", 
-                    fileName: `${title}.mp3`, 
-                    quoted: m, 
-                    contextInfo: {
-                        'forwardingScore': 200,
-                        'isForwarded': true,
-                        externalAdReply:{
-                            showAdAttribution: false,
-                            title: `${title}`,
-                            body: `${vid.author.name}`,
-                            mediaType: 2, 
-                            sourceUrl: `${vid.url}`,
-                            thumbnail: await (await fetch(vid.thumbnail)).buffer()
-                        }
-                    }
-                }, { quoted: m })
-            } else if (command === 'mp4doc') {
-                await conn.sendMessage(m.chat, { 
-                    document: { url: dl_url }, 
-                    caption: `${title}\n⇆ㅤㅤ◁ㅤㅤ❚❚ㅤㅤ▷ㅤㅤ↻\n00:15 ━━━━●────── ${vid.timestamp}`, 
-                    mimetype: 'video/mp4', 
-                    fileName: `${title}.mp4`, 
-                    quoted: m, 
-                    contextInfo: {
-                        'forwardingScore': 200,
-                        'isForwarded': true,
-                        externalAdReply:{
-                            showAdAttribution: false,
-                            title: `${title}`,
-                            body: `${vid.author.name}`,
-                            mediaType: 2, 
-                            sourceUrl: `${vid.url}`,
-                            thumbnail: await (await fetch(vid.thumbnail)).buffer()
-                        }
-                    }
-                }, { quoted: m })
-            }
-
-            await m.react('✅')
-        }
-    } catch (error) {
-        console.error(error)
-        await conn.reply(m.chat, `*☓ Ocurrió un error inesperado.*`, m).then(_ => m.react('✖️'))
-    }
 }
-
-handler.help = ["play"].map(v => v + " <formato> <búsqueda o enlace>")
-handler.tags = ["downloader"]
-handler.command = ['playy', 'play2', 'mp3', 'mp4', 'mp3doc', 'mp4doc']
-handler.register = false 
-handler.star = 1
+handler.help = ['reg']
+handler.tags = ['rg']
+handler.command = ['verify', 'reg', 'verificar'] 
 
 export default handler
